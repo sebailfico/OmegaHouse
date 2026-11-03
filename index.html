@@ -49,7 +49,8 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--accent
 @media (max-width:600px){.stage{aspect-ratio:1/1}.hint{display:none}}
 #v3d,#v2d{position:absolute;inset:0}
 #v3d canvas{display:block;width:100%;height:100%;touch-action:none}
-#v2d svg{width:100%;height:100%;display:block}
+#v2d svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#v2d svg:active{cursor:grabbing}
 .hint{position:absolute;left:10px;bottom:8px;font:12px/1.3 var(--f-mono);color:var(--muted);pointer-events:none}
 .fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
 .foot{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:10px 12px;border-top:1px solid var(--line);font-size:13px}
@@ -92,7 +93,7 @@ td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:now
   <header>
     <div>
       <h1>Progetto cucina</h1>
-      <p class="sub">Proposta 7, in prova, con mobili IKEA METOD. Forno e piano a induzione appoggiati all'angolo smussato, lavello sulla parete sinistra, sotto la finestra un mobile da 80 cm profondo 37. Frigo slim alto all'ingresso della cucina. In veranda lavasciuga sopra la lavastoviglie, in colonna. In camera letto BRIMNES e armadio PAX; resto della casa vuoto con finestre e porte.</p>
+      <p class="sub">Proposta 7, in prova, con mobili IKEA METOD. Forno e piano a induzione appoggiati all'angolo smussato, lavello sulla parete sinistra, sotto la finestra un mobile da 80 cm profondo 37. Frigo slim alto all'ingresso della cucina. In veranda lavasciuga sopra la lavastoviglie, in colonna. In camera letto BRIMNES e armadio PAX, in soggiorno tavolo con 6 sedie e un armadio; resto della casa vuoto con finestre e porte.</p>
     </div>
     <span class="badge">Bozza · misure provvisorie</span>
   </header>
@@ -175,7 +176,8 @@ td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:now
       <h2>Resto della casa</h2>
       <ul>
         <li>Ricavato dalla tavola della SCIA: soggiorno, ingresso, bagno, disimpegno, camera e balcone. Finestre chiuse, porte finestre aperte, porta d'ingresso.</li>
-        <li><b>Camera</b>: letto BRIMNES con contenitori e testiera, 234 × 166 cm per materasso 160 × 200, sulla parete sinistra e centrato, piedi verso il centro della stanza; ai lati restano circa 78 cm per parte. Sulla parete destra PAX 275 cm, profondo 58 e alto 236. Dal lato dell'ingresso: due moduli da 50 con le ante che si aprono dal centro dei due; in mezzo il 75 con ante da 25 e 50 specchiate, aperte dal centro; in fondo, verso la porta finestra, il 100 con due ante da 50, anche queste dal centro. Tra i piedi del letto e le ante chiuse restano circa 107 cm, circa 57 con un'anta da 50 aperta.</li>
+        <li><b>Soggiorno</b> (posizioni provvisorie): tavolo 180 × 90 con 6 sedie, 3 per lato, nella parte larga verso la cucina. Tra il tavolo e il muro del bagno restano circa 71 cm di passaggio verso l'ingresso, dietro le sedie verso la porta finestra circa 51. Armadio 150 × 60 × 200 sulla parete verso la camera.</li>
+        <li><b>Camera</b>: letto BRIMNES con contenitori e testiera, 234 × 166 cm per materasso 160 × 200, sulla parete sinistra e centrato, piedi verso il centro della stanza; ai lati restano circa 78 cm per parte. Sulla parete destra PAX 275 cm, profondo 58 e alto 236. Dal lato dell'ingresso: due moduli da 50 con le ante che si aprono dal centro dei due; in mezzo il 75 con ante a specchio da 25 e 50, aperte dal centro; in fondo, verso la porta finestra, il 100 con due ante da 50, anche queste dal centro. Tra i piedi del letto e le ante chiuse restano circa 107 cm, circa 57 con un'anta da 50 aperta.</li>
         <li>Sul retro il balcone resta: l'armadio a muro con porte in PVC bianco occupa solo il lato sinistro, lungo tutto il muro, e lascia libera la porta finestra. Profondità ipotizzata 46 cm.</li>
         <li>Le misure delle altre stanze sono in scala dal disegno e vanno verificate prima di arredarle.</li>
       </ul>
@@ -222,7 +224,7 @@ const kitchenWalls=[[K.A,K.B],[K.B,K.C],[K.C,K.D,{ops:[[WIN[0]-K.C[0],WIN[1]-K.C
 const verandaWalls=[[[205,266],[245,266]],[[245,266],[245,310]],[[245,310],[377,310],{ops:[[30,132,96,220]]}],[[377,310],[377,171]],[[377,171],[205,171],{ops:[[72,119,100,258]]}]];
 /* resto della casa (in scala dalla tavola SCIA) */
 const ROOMS=[
- {name:"Soggiorno",area:"15,95 m²",lab:[-78,-190],ref:[-80,-250],col:"#ECE6DA",
+ {name:"Soggiorno",area:"15,95 m²",lab:[-78,-400],ref:[-80,-250],col:"#ECE6DA",
   poly:[[-168,-14],[0,-14],[0,0],[105,0],[105,-276],[230,-276],[230,-419],[147.5,-419],[12,-419],[12,-574],[-168,-574]],
   edges:{0:[[23,123,0,249]],2:"open",4:[[63,125,0,210]],5:[[29,119,0,215]],6:"open"}},
  {name:"Ingresso",lab:[172,-352],label:true},
@@ -246,9 +248,12 @@ const RECESS=[[-198,56],[-34,56],[-34,146],[-198,146]], ARM=[-196,-150,58,144];
 // camera: BRIMNES con testiera sulla parete sinistra (piedi verso +x), PAX sulla parete destra: dal fondo (porta finestra) 100, 75, 50, 50 verso l'ingresso
 const BED={x0:-171.4,len:234,w:166,hb:28,yc:-759}; BED.x1=BED.x0+BED.len; BED.y0=BED.yc-BED.w/2; BED.y1=BED.yc+BED.w/2;
 // moduli dal fondo verso l'ingresso; ante [larghezza, cerniera "a" = lato verso il fondo, "b" = lato verso l'ingresso]: tutte si aprono dal centro del gruppo
-const PAX={x0:172,x1:230,y0:-918,h:236,mods:[{w:100,d:[[50,"a"],[50,"b"]]},{w:75,d:[[50,"a"],[25,"b"]]},{w:50,d:[[50,"a"]]},{w:50,d:[[50,"b"]]}]};
+const PAX={x0:172,x1:230,y0:-918,h:236,mods:[{w:100,d:[[50,"a"],[50,"b"]]},{w:75,d:[[50,"a",1],[25,"b",1]]},{w:50,d:[[50,"a"]]},{w:50,d:[[50,"b"]]}]};
 PAX.y1=PAX.y0+PAX.mods.reduce((a,m)=>a+m.w,0);
-const PAXDOORS=(()=>{ const out=[]; let y=PAX.y0; PAX.mods.forEach(m=>m.d.forEach(([w,h])=>{ out.push({ya:y,yb:y+w,hinge:h==="a"?y:y+w}); y+=w; })); return out; })();
+const PAXDOORS=(()=>{ const out=[]; let y=PAX.y0; PAX.mods.forEach(m=>m.d.forEach(([w,h,mi])=>{ out.push({ya:y,yb:y+w,hinge:h==="a"?y:y+w,mirror:!!mi}); y+=w; })); return out; })();
+// soggiorno: tavolo 180x90 con 3+3 sedie nella parte larga, armadio sulla parete verso la camera (posizioni provvisorie)
+const DIN={x0:-146,x1:34,y0:-195,y1:-105}; const CHAIRS=[-116,-56,4];
+const SWARD={x0:-156,x1:-6,y0:-574,y1:-514,h:200};
 const PF=[{x0:-145,x1:-45,y:35,dir:-1},{x0:-30,x1:70,y:-962,dir:1}];
 const PIER=[[105,-9.3],[147.7,-9.3],[147.7,49.5],[134.8,49.5],[105,48]], NOTCH=[[105,-149],[150,-149],[150,-103],[105,-103]];
 const WINS2D=[[[WIN[0],271],[WIN[1],294]],[[275,310],[377,322]],[[258,149],[305,171]]];
@@ -266,7 +271,8 @@ const yDE=x=>K.D[1]-(x-K.D[0])*(K.D[1]-K.E[1])/(K.E[0]-K.D[0]);
 const worktopFor=w=>{ const x1=SINK_X0+w; return [[0,RUN_L[0]],[63.5,RUN_L[0]],[63.5,WT_YL],onD(S0,DF+1.7),onD(S1,DF+1.7),[x1,WT_F]].concat(x1>K.D[0]?[[x1,yDE(x1)],[K.D[0],271]]:[[x1,271]],[[39.6,271],[0,222]]); };
 const WASH=[317,377,171,237], WZ=90; // colonna: lavastoviglie a terra, lavasciuga sopra su ripiano a 90 cm
 const FRIDGE={d:51.1,w:47,h:150,gap:5}; const FRY=[RUN_L[0]-FRIDGE.w,RUN_L[0]], FX=[FRIDGE.gap,FRIDGE.gap+FRIDGE.d];
-let sinkW=80, planMode="kitchen";
+let sinkW=80, planMode="kitchen", view2d=null;
+const VB2D={kitchen:[-75,-14,470,494],house:[-245,-12,650,1410]};
 const css=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
 
 /* ---------- 2D ---------- */
@@ -306,6 +312,14 @@ function plan2D(){
   const arcP=(c,a,b)=>{ const S=[a[0],Y(a[1])], E=[b[0],Y(b[1])], C=[c[0],Y(c[1])]; const cr=(S[0]-C[0])*(E[1]-C[1])-(S[1]-C[1])*(E[0]-C[0]); const r=Math.hypot(S[0]-C[0],S[1]-C[1]);
     return `<path d="M${f(S[0])} ${f(S[1])} A${f(r)} ${f(r)} 0 0 ${cr>0?1:0} ${f(E[0])} ${f(E[1])}" fill="none" stroke="var(--fg)" stroke-width=".6" stroke-dasharray="2 1.5"/>`; };
   const leaf2d=(h,closed,open)=>`<line x1="${f(h[0])}" y1="${f(Y(h[1]))}" x2="${f(open[0])}" y2="${f(Y(open[1]))}" stroke="var(--fg)" stroke-width="1.4"/>`+arcP(h,closed,open);
+  // soggiorno: tavolo, sedie, armadio
+  { const D=DIN; out.push(rect([D.x0,D.y0],[D.x1,D.y1],'fill="var(--worktop)" fill-opacity=".45" stroke="var(--fg)" stroke-width=".9"'));
+    CHAIRS.forEach(cx=>[[D.y1-8,D.y1+36,D.y1+36,D.y1+40],[D.y0-36,D.y0+8,D.y0-40,D.y0-36]].forEach(([s0,s1,b0,b1])=>{ out.push(rect([cx-22,s0],[cx+22,s1],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".7"')); out.push(rect([cx-22,b0],[cx+22,b1],'fill="var(--fg)"')); }));
+    const hs=planMode==="house"; out.push(`<text x="${(D.x0+D.x1)/2}" y="${Y((D.y0+D.y1)/2)+3}" text-anchor="middle" class="ap" style="font-size:${hs?9:6}px">TAVOLO 180×90</text>`);
+    const W=SWARD; out.push(rect([W.x0,W.y0],[W.x1,W.y1],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"'));
+    out.push(`<line x1="${W.x0}" y1="${Y(W.y1-3)}" x2="${W.x1}" y2="${Y(W.y1-3)}" stroke="var(--fg)" stroke-width=".6"/><line x1="${(W.x0+W.x1)/2}" y1="${Y(W.y1)}" x2="${(W.x0+W.x1)/2}" y2="${Y(W.y1-3)}" stroke="var(--fg)" stroke-width=".6"/>`);
+    out.push(`<text x="${(W.x0+W.x1)/2}" y="${Y((W.y0+W.y1)/2)+3}" text-anchor="middle" class="ap" style="font-size:${hs?9:6}px">ARMADIO 150</text>`);
+  }
   // camera: letto e armadio
   { const B=BED, hx=B.x0+B.hb;
     out.push(rect([B.x0,B.y0],[B.x1,B.y1],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"'));
@@ -317,6 +331,7 @@ function plan2D(){
     const tx=(hx+66+B.x1)/2; out.push(`<text x="${tx}" y="${Y(B.yc)+3}" text-anchor="middle" class="ap" style="font-size:${planMode==="house"?9:6}px">BRIMNES 160×200</text>`);
     const P=PAX; out.push(rect([P.x0-2,P.y0],[P.x1,P.y1],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"'));
     let y=P.y0; P.mods.forEach((m,i)=>{ y+=m.w; if(i<P.mods.length-1) out.push(`<line x1="${P.x0-2}" y1="${Y(y)}" x2="${P.x1}" y2="${Y(y)}" stroke="var(--fg)" stroke-width=".7"/>`); });
+    PAXDOORS.forEach(d=>{ if(d.mirror) out.push(rect([P.x0-2.5,d.ya+.5],[P.x0+.5,d.yb-.5],'fill="#B7CAD3"')); });
     PAXDOORS.forEach(d=>{ const free=d.hinge===d.ya?d.yb:d.ya, w=d.yb-d.ya; out.push(arcP([P.x0-2,d.hinge],[P.x0-2,free],[P.x0-2-w,d.hinge])); });
     const px=(P.x0+P.x1)/2-1, py=(P.y0+P.y1)/2; out.push(`<text x="${px}" y="${Y(py)}" transform="rotate(-90 ${px} ${Y(py)})" text-anchor="middle" class="ap" dy="3" style="font-size:${planMode==="house"?9:6}px">PAX 275 · 100+75+50+50</text>`);
   }
@@ -371,8 +386,8 @@ function plan2D(){
   const ce=SINK_X0+sinkW+1.8;
   if(ce>=173) out.push(arrow(174.5,WT_F-1,174.5,172,"≈ "+Math.round(WT_F-171),179,200,"start"));
   else out.push(arrow(ce+1,WT_F-1,172,172,"≈ "+Math.round(Math.hypot(173-ce,WT_F-171)),177,203,"start"));
-  const vb=planMode==="kitchen"?"-75 -14 470 494":"-245 -12 650 1410";
-  document.getElementById("v2d").innerHTML=`<svg viewBox="${vb}" role="img" aria-label="Pianta quotata della cucina e della casa"><defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--wallink)"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--surface)" stroke-width="1" stroke-opacity=".45"/></pattern><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="var(--warn)"/></marker></defs><style>.dt{font:500 8.5px var(--f-mono);fill:var(--fg)}.room{font:500 ${planMode==="house"?20:10}px var(--f-display);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}.ar{font:400 ${planMode==="house"?15:8}px var(--f-mono);fill:var(--muted)}.nt{font:600 8px var(--f-mono)}.ap{font:500 6px var(--f-mono);fill:var(--fg)}.pt{font:500 7.5px var(--f-mono);fill:var(--warn)}</style>${out.join("")}</svg>`;
+  const vb=(view2d||VB2D[planMode]).map(n=>n.toFixed(1)).join(" ");
+  document.getElementById("v2d").innerHTML=`<span class="hint" style="z-index:1">Trascina per spostare · rotella o pizzico per lo zoom · doppio clic per tornare</span><svg viewBox="${vb}" role="img" aria-label="Pianta quotata della cucina e della casa"><defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--wallink)"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--surface)" stroke-width="1" stroke-opacity=".45"/></pattern><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="var(--warn)"/></marker></defs><style>.dt{font:500 8.5px var(--f-mono);fill:var(--fg)}.room{font:500 ${planMode==="house"?20:10}px var(--f-display);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}.ar{font:400 ${planMode==="house"?15:8}px var(--f-mono);fill:var(--muted)}.nt{font:600 8px var(--f-mono)}.ap{font:500 6px var(--f-mono);fill:var(--fg)}.pt{font:500 7.5px var(--f-mono);fill:var(--warn)}</style>${out.join("")}</svg>`;
 }
 
 /* ---------- tab e comandi 2D ---------- */
@@ -385,7 +400,7 @@ function showTab(is3d){
   if(is3d&&window.__resize3d) window.__resize3d();
 }
 tab3d.onclick=()=>showTab(true); tab2d.onclick=()=>showTab(false);
-function setPlan(m){ planMode=m; plan2D(); document.getElementById("planKitchen").setAttribute("aria-pressed",String(m==="kitchen")); document.getElementById("planHouse").setAttribute("aria-pressed",String(m==="house")); }
+function setPlan(m){ planMode=m; view2d=null; plan2D(); document.getElementById("planKitchen").setAttribute("aria-pressed",String(m==="kitchen")); document.getElementById("planHouse").setAttribute("aria-pressed",String(m==="house")); }
 document.getElementById("planKitchen").onclick=()=>setPlan("kitchen");
 document.getElementById("planHouse").onclick=()=>setPlan("house");
 try{ if(localStorage.getItem("cucina-tab")==="2d") showTab(false); }catch(e){}
@@ -399,6 +414,22 @@ function setSink(w){
 }
 document.querySelectorAll("#sinkOpt button").forEach(b=>b.onclick=()=>setSink(+b.dataset.w));
 plan2D();
+
+/* pianta navigabile: trascina, rotella o pizzico, doppio clic per tornare */
+(function(){ const el=v2d, P=new Map();
+  const cur=()=>(view2d||VB2D[planMode]).slice();
+  const apply=v=>{ view2d=v; const s=el.querySelector("svg"); if(s) s.setAttribute("viewBox",v.map(n=>n.toFixed(1)).join(" ")); };
+  const scaleOf=v=>{ const r=el.getBoundingClientRect(); return Math.min(r.width/v[2],r.height/v[3]); };
+  const toSvg=(cx,cy,v)=>{ const r=el.getBoundingClientRect(), sc=scaleOf(v); return [v[0]+(cx-r.left-(r.width-v[2]*sc)/2)/sc, v[1]+(cy-r.top-(r.height-v[3]*sc)/2)/sc]; };
+  const zoomAt=(cx,cy,f)=>{ const v=cur(), b=VB2D[planMode], [px,py]=toSvg(cx,cy,v); const w=Math.max(b[2]/10,Math.min(b[2]*1.6,v[2]/f)), k=w/v[2]; apply([px-(px-v[0])*k,py-(py-v[1])*k,w,v[3]*k]); };
+  el.addEventListener("wheel",e=>{ e.preventDefault(); zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0015)); },{passive:false});
+  el.addEventListener("pointerdown",e=>{ try{el.setPointerCapture(e.pointerId);}catch(_){} P.set(e.pointerId,[e.clientX,e.clientY]); });
+  el.addEventListener("pointermove",e=>{ if(!P.has(e.pointerId)) return; const prev=P.get(e.pointerId); P.set(e.pointerId,[e.clientX,e.clientY]);
+    if(P.size===1){ const v=cur(), sc=scaleOf(v); apply([v[0]-(e.clientX-prev[0])/sc,v[1]-(e.clientY-prev[1])/sc,v[2],v[3]]); }
+    else if(P.size===2){ const o=[...P.entries()].find(([id])=>id!==e.pointerId)[1], d0=Math.hypot(prev[0]-o[0],prev[1]-o[1]), d1=Math.hypot(e.clientX-o[0],e.clientY-o[1]); if(d0>0) zoomAt((e.clientX+o[0])/2,(e.clientY+o[1])/2,d1/d0); } });
+  const up=e=>P.delete(e.pointerId); el.addEventListener("pointerup",up); el.addEventListener("pointercancel",up);
+  el.addEventListener("dblclick",()=>{ view2d=null; plan2D(); });
+})();
 
 /* ---------- 3D ---------- */
 if(typeof THREE==="undefined"){ document.getElementById("glfail").hidden=false; document.getElementById("hint").hidden=true; return; }
@@ -498,6 +529,17 @@ box(232,240,-394,-306,0,215,mat("#6B4F3A",{roughness:.6})); box(230,232,-318,-31
 box(ARM[0],ARM[1]-2,ARM[2],ARM[3],0,240,mat("#ECECEA"));
 [0,1,2].forEach(i=>{ const w=(ARM[3]-ARM[2])/3, y0=ARM[2]+w*i; box(ARM[1]-2,ARM[1],y0+.4,y0+w-.4,1,239,mat("#FAFAF8",{roughness:.4})); box(ARM[1],ARM[1]+1.2,y0+w-8,y0+w-6,110,130,mat("#B9BEBD",{metalness:.5,roughness:.4})); });
 
+/* soggiorno: tavolo 180x90, 6 sedie, armadio 150 */
+{ const D=DIN, woodM=mat("#B98E62",{roughness:.6}), chM=mat("#3E4442",{roughness:.7}), wM=mat("#EEEDE8",{roughness:.55}), hM=mat("#8E9592",{metalness:.6,roughness:.35});
+  box(D.x0,D.x1,D.y0,D.y1,72,75,woodM);
+  [[D.x0+4,D.y0+4],[D.x1-9,D.y0+4],[D.x0+4,D.y1-9],[D.x1-9,D.y1-9]].forEach(([x,y])=>box(x,x+5,y,y+5,0,72,woodM));
+  CHAIRS.forEach(cx=>[[D.y1-8,D.y1+36,D.y1+36,D.y1+39],[D.y0-36,D.y0+8,D.y0-39,D.y0-36]].forEach(([s0,s1,b0,b1])=>{
+    box(cx-22,cx+22,s0,s1,43,46,chM); box(cx-22,cx+22,b0,b1,46,86,chM);
+    [[cx-21,s0+1],[cx+18,s0+1],[cx-21,s1-4],[cx+18,s1-4]].forEach(([x,y])=>box(x,x+3,y,y+3,0,43,chM)); }));
+  const W=SWARD; box(W.x0,W.x1,W.y0,W.y1-2,0,W.h,wM);
+  [[W.x0,(W.x0+W.x1)/2],[(W.x0+W.x1)/2,W.x1]].forEach(([a,b],i)=>{ box(a+.25,b-.25,W.y1-2,W.y1,1,W.h-1,mat("#F7F6F2",{roughness:.45})); const hx=i?a+3:b-5; box(hx,hx+2,W.y1,W.y1+1.2,90,130,hM); });
+}
+
 /* camera: BRIMNES 160x200 con testiera e contenitori, PAX 275 */
 { const B=BED, hx=B.x0+B.hb, wM=mat("#F3F2EE",{roughness:.6}), sheetM=mat("#FBFBF8",{roughness:.9}), duvM=mat("#9FB2C2",{roughness:.95}), pilM=mat("#F7F6F2",{roughness:.95});
   box(B.x0,hx,B.y0,B.y1,0,111,wM);
@@ -509,8 +551,13 @@ box(ARM[0],ARM[1]-2,ARM[2],ARM[3],0,240,mat("#ECECEA"));
   box(hx+52,B.x1-2,B.y0-1,B.y0+1,44,63,duvM); box(hx+52,B.x1-2,B.y1-1,B.y1+1,44,63,duvM);
   [[B.y0+8,B.yc-3],[B.yc+3,B.y1-8]].forEach(q=>{ const pm=new THREE.Mesh(new THREE.BoxGeometry(38,12,q[1]-q[0]),pilM); pm.position.copy(toV(hx+27,(q[0]+q[1])/2,64)); pm.rotation.z=.18; add(pm); });
   const P=PAX, pxM=mat("#F4F3EF",{roughness:.5}), dM=mat("#FAFAF8",{roughness:.45}), hM=mat("#8E9592",{metalness:.6,roughness:.35});
+  // ante a specchio: grigio chiaro lucido con riflessi finti in diagonale
+  const mirM=(()=>{ const cv=document.createElement("canvas"); cv.width=64; cv.height=256; const g=cv.getContext("2d");
+    const gr=g.createLinearGradient(0,0,64,256); gr.addColorStop(0,"#F3F6F7"); gr.addColorStop(.55,"#CFD9DE"); gr.addColorStop(1,"#B4C1C7"); g.fillStyle=gr; g.fillRect(0,0,64,256);
+    [[18,16,.6],[44,6,.45]].forEach(([a,w,o])=>{ g.fillStyle="rgba(255,255,255,"+o+")"; g.beginPath(); g.moveTo(a,0); g.lineTo(a+w,0); g.lineTo(a+w-70,256); g.lineTo(a-70,256); g.closePath(); g.fill(); });
+    const t=new THREE.CanvasTexture(cv); t.encoding=THREE.sRGBEncoding; return new THREE.MeshPhongMaterial({map:t,shininess:140,specular:0xffffff}); })();
   box(P.x0,P.x1,P.y0,P.y1,0,P.h,pxM);
-  PAXDOORS.forEach(d=>{ box(P.x0-2,P.x0,d.ya+.25,d.yb-.25,1,P.h-1,dM); const hy=d.hinge===d.ya?d.yb-5:d.ya+3; box(P.x0-3.2,P.x0-2,hy,hy+2,95,135,hM); });
+  PAXDOORS.forEach(d=>{ box(P.x0-2,P.x0,d.ya+.25,d.yb-.25,1,P.h-1,d.mirror?mirM:dM); const hy=d.hinge===d.ya?d.yb-5:d.ya+3; box(P.x0-3.2,P.x0-2,hy,hy+2,95,135,hM); });
 }
 
 /* mobili */
