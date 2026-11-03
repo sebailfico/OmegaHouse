@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Progetto cucina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+/* Layout: tavola di progetto — viewer grande a sinistra, distinta componenti a destra, note tecniche sotto */
+:root{
+  --bg:#F1F3EF; --surface:#FFFFFF; --fg:#1D2723; --muted:#5D6B65; --line:#D5DBD6;
+  --accent:#2F6B61; --accent-ink:#FFFFFF; --warn:#9A5B12; --warn-bg:#FBF0DF;
+  --stage:#E6EAE5; --floor:#E9E4DA; --floor2:#F4F1EA; --wallink:#3A4541; --worktop:#C9A57A; --base:#FFFFFF; --veranda:#DCE6E1;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#131917; --surface:#1B2320; --fg:#E3EAE6; --muted:#9AA9A2; --line:#2E3A36;
+  --accent:#74B5AA; --accent-ink:#0F1513; --warn:#E3B072; --warn-bg:#2E2516;
+  --stage:#1E2724; --floor:#3A3833; --floor2:#2A2B27; --wallink:#C9D3CE; --worktop:#A88660; --base:#D9DDD9; --veranda:#2A3632;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#131917; --surface:#1B2320; --fg:#E3EAE6; --muted:#9AA9A2; --line:#2E3A36;
+  --accent:#74B5AA; --accent-ink:#0F1513; --warn:#E3B072; --warn-bg:#2E2516;
+  --stage:#1E2724; --floor:#3A3833; --floor2:#2A2B27; --wallink:#C9D3CE; --worktop:#A88660; --base:#D9DDD9; --veranda:#2A3632;
+  color-scheme:dark}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px;display:grid;gap:24px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,38px);line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.badge{font-family:var(--f-mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--warn);background:var(--warn-bg);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);padding:5px 10px;border-radius:999px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.viewer{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0}
+.bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.tabs,.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+button{font:500 13px/1 var(--f-body);color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:8px 11px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"],button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.stage{position:relative;background:var(--stage);aspect-ratio:4/3;max-width:100%}
+@media (max-width:600px){.stage{aspect-ratio:1/1}.hint{display:none}}
+#v3d,#v2d{position:absolute;inset:0}
+#v3d canvas{display:block;width:100%;height:100%;touch-action:none}
+#v2d svg{width:100%;height:100%;display:block}
+.hint{position:absolute;left:10px;bottom:8px;font:12px/1.3 var(--f-mono);color:var(--muted);pointer-events:none}
+.fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
+.foot{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:10px 12px;border-top:1px solid var(--line);font-size:13px}
+.lbl{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sw{width:26px;height:26px;padding:0;border-radius:50%;border:2px solid var(--line)}
+.sw[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--surface)}
+.check{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.check input{accent-color:var(--accent);width:16px;height:16px}
+aside{min-width:0;display:grid;gap:14px}
+h2{font-family:var(--f-display);font-weight:700;font-size:20px;margin:0;letter-spacing:-.005em}
+h3{font-family:var(--f-display);font-weight:500;font-size:13px;margin:0;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.list li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:600 12px/1 var(--f-mono);margin-top:1px}
+.num.wall{background:transparent;color:var(--accent);border:1.5px dashed var(--accent)}
+.num.plain{background:var(--muted)}
+.it b{font-weight:600}
+.dim{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.it p{margin:2px 0 0;font-size:13.5px;color:var(--muted)}
+.notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+@media (max-width:900px){.notes{grid-template-columns:minmax(0,1fr)}}
+.notes section{min-width:0;display:grid;gap:10px;align-content:start}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:7px}
+.notes li{font-size:14px}
+.todo{background:var(--warn-bg);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);border-radius:10px;padding:16px}
+.todo h2{color:var(--warn)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font:500 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.src{font-size:12px;color:var(--muted)}
+.ok{color:var(--accent);font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Progetto cucina</h1>
+      <p class="sub">Proposta 7, in prova, con mobili IKEA METOD. Forno e piano a induzione appoggiati all'angolo smussato, lavello sulla parete sinistra, sotto la finestra un mobile da 80 cm profondo 37. Frigo slim alto all'ingresso della cucina. In veranda lavasciuga sopra la lavastoviglie, in colonna. Resto della casa vuoto con finestre e porte.</p>
+    </div>
+    <span class="badge">Bozza · misure provvisorie</span>
+  </header>
+
+  <div class="grid">
+    <section class="viewer" aria-label="Visualizzazione della cucina">
+      <div class="bar">
+        <div class="tabs" role="tablist" aria-label="Vista">
+          <button id="tab3d" role="tab" aria-selected="true" aria-controls="v3d">3D</button>
+          <button id="tab2d" role="tab" aria-selected="false" aria-controls="v2d">Pianta quotata</button>
+        </div>
+        <div class="group" id="camBtns" aria-label="Punto di vista">
+          <button id="camIn" aria-pressed="true">Dal soggiorno</button>
+          <button id="camCorner" aria-pressed="false">Verso l'angolo</button>
+          <button id="camTop" aria-pressed="false">Cucina dall'alto</button>
+          <button id="camHouse" aria-pressed="false">Tutta la casa</button>
+        </div>
+        <div class="group" id="planBtns" aria-label="Inquadratura della pianta" hidden>
+          <button id="planKitchen" aria-pressed="true">Cucina</button>
+          <button id="planHouse" aria-pressed="false">Tutta la casa</button>
+        </div>
+      </div>
+      <div class="stage">
+        <div id="v3d" role="tabpanel" aria-labelledby="tab3d"><div class="fallback" id="glfail" hidden>Il 3D non si è caricato su questo dispositivo. Apri la pianta quotata.</div><span class="hint" id="hint">Trascina per ruotare · rotella o pizzico per lo zoom · resto della casa sezionato a 120 cm</span></div>
+        <div id="v2d" role="tabpanel" aria-labelledby="tab2d" hidden></div>
+      </div>
+      <div class="foot">
+        <span class="lbl">Ante</span>
+        <div class="group" id="fronts">
+          <button class="sw" data-c="#F2F1EC" aria-pressed="true" title="Bianco opaco" aria-label="Ante bianco opaco"></button>
+          <button class="sw" data-c="#A7B5A0" aria-pressed="false" title="Verde salvia" aria-label="Ante verde salvia"></button>
+          <button class="sw" data-c="#B88A5B" aria-pressed="false" title="Effetto rovere" aria-label="Ante effetto rovere"></button>
+          <button class="sw" data-c="#4A5652" aria-pressed="false" title="Antracite" aria-label="Ante antracite"></button>
+        </div>
+        <label class="check"><input type="checkbox" id="optWall" checked> Pensili</label>
+        <label class="check"><input type="checkbox" id="optNum" checked> Numeri</label>
+      </div>
+    </section>
+
+    <aside>
+      <h2>Componenti</h2>
+      <ul class="list">
+        <li><span class="num">1</span><div class="it"><b>Mobile base per lavello, parete sinistra</b> <span class="dim">60 × 60 × 80</span><p>Lavello a una vasca con rubinetto. Acqua e scarico vanno portati su questa parete.</p></div></li>
+        <li><span class="num">2</span><div class="it"><b>Mobile base con forno, contro l'angolo smussato</b> <span class="dim">60 × 60 × 80</span><p>Appoggiato al muro da 63 cm e parallelo a esso. Forno 60 cm con cassetto basso, sopra induzione 60 cm. Il mobile del lavello finisce prima dello smusso, così lo sportello del forno si apre senza toccarlo.</p></div></li>
+        <li><span class="num">3</span><div class="it"><b>Mobile base con cassetti, sotto la finestra</b> <span class="dim" id="sinkDim">80 × 37 × 80</span><p>Telaio METOD poco profondo (37 cm invece di 60), largo 80: va oltre la finestra. A destra del piano cottura non sporge davanti allo sportello del forno. Da 88 a 168 cm dalla parete sinistra.</p></div></li>
+        <li><span class="num wall">4</span><div class="it"><b>Pensile, 1 anta</b> <span class="dim">60 × 37 × 100</span><p>Sopra il lavello, da 140 a 240 cm da terra. Può essere un pensile scolapiatti.</p></div></li>
+        <li><span class="num wall">5</span><div class="it"><b>Cappa a parete sullo smusso</b> <span class="dim">60 × 50</span><p>Con il piano cottura contro il muro torna possibile una cappa a camino da 60 cm: lo smusso è largo 63. Fondo a circa 158 cm da terra.</p></div></li>
+        <li><span class="num plain">6</span><div class="it"><b>Piano di lavoro su misura</b> <span class="dim">prof. 63,5 e 41 · sp. 3,8</span><p>Un pezzo unico: profondo 63,5 sopra lavello e forno, 41 sotto la finestra. Davanti al piano cottura segue il bordo del mobile e non sporge. Copre anche l'angolo vuoto tra lavello e forno.</p></div></li>
+        <li><span class="num">8</span><div class="it"><b>Frigo slim alto</b> <span class="dim">47 × 51,1 × 150</span><p>Libera installazione, sulla parete sinistra subito dopo l'ingresso, accostato al mobile del lavello e staccato 5 cm dal muro per l'aerazione. Cerniera dal lato dell'ingresso.</p></div></li>
+        <li><span class="num">7</span><div class="it"><b>Lavasciuga normale in veranda, in alto</b> <span class="dim">60 × 60 × 85</span><p>Su un ripiano in acciaio a 90 cm, tassellato al muro di destra e con due montanti a terra sul davanti: non pesa sulla lavastoviglie. Oblò verso l'apertura della veranda, centro a circa 132 cm da terra. Colonna alta circa 175 cm.</p></div></li>
+        <li><span class="num">9</span><div class="it"><b>Lavastoviglie, sotto la lavasciuga</b> <span class="dim">60 × 60 × 85</span><p>A libera installazione, a terra tra i montanti. Lo sportello aperto occupa circa 60 cm verso l'apertura della veranda.</p></div></li>
+      </ul>
+      <p class="src">Struttura: telai METOD (base 80 cm + piedini 8 cm, piano finito a circa 92 cm). Ante, maniglie ed elettrodomestici a scelta: modelli e disponibilità da verificare sul sito o nel planner IKEA.</p>
+    </aside>
+  </div>
+
+  <div class="notes">
+    <section>
+      <h2>Cosa cambia</h2>
+      <ul>
+        <li><b>Forno e piano cottura contro lo smusso</b>, paralleli al muro da 63 cm, con la cappa a parete sopra. Non c'è più il vano vuoto dietro il mobile.</li>
+        <li><b>Sotto la finestra</b> un mobile da 80 cm profondo 37, che va oltre la finestra e lascia libero lo sportello del forno. Il passaggio verso la veranda è di circa 59 cm (46 nella proposta 6).</li>
+        <li><b>In veranda</b> lavasciuga normale sopra la lavastoviglie, in colonna.</li>
+        <li><b>Lavello e frigo</b> si spostano di 12 cm verso la finestra: davanti al frigo restano circa 57 cm nel punto più stretto (prima 52), davanti al lavello circa 82 (prima 76). L'ingresso resta largo 105 cm.</li>
+        <li><b>Il prezzo</b>: tra lavello e forno resta un angolo di piano senza mobile sotto, e il piano sotto la finestra è meno profondo.</li>
+      </ul>
+    </section>
+    <section class="todo">
+      <h2>Da misurare in casa</h2>
+      <ul>
+        <li>Distanza tra lo spigolo del muro del bagno e la parete della finestra.</li>
+        <li>Altezza del davanzale (qui 105 cm) e distanza della finestra dallo smusso.</li>
+        <li>Attacchi di acqua e scarico: il lavello ora è sulla parete sinistra; in veranda per lavasciuga e lavastoviglie.</li>
+        <li>Prese e linea elettrica: induzione, forno, lavasciuga e lavastoviglie insieme con un contatore da 3 kW richiedono un piano con limitatore di potenza.</li>
+        <li>Radiatore, altezza del soffitto, larghezza dell'apertura verso la veranda.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Resto della casa</h2>
+      <ul>
+        <li>Disegnato vuoto, ricavato dalla tavola della SCIA: soggiorno, ingresso, bagno, disimpegno, camera e balcone. Finestre chiuse, porte finestre aperte, porta d'ingresso.</li>
+        <li>Sul retro il balcone resta: l'armadio a muro con porte in PVC bianco occupa solo il lato sinistro, lungo tutto il muro, e lascia libera la porta finestra. Profondità ipotizzata 46 cm.</li>
+        <li>Le misure delle altre stanze sono in scala dal disegno e vanno verificate prima di arredarle.</li>
+      </ul>
+    </section>
+  </div>
+
+  <section style="display:grid;gap:10px">
+    <h2>Misure usate</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Elemento</th><th>Misura</th><th>Fonte</th></tr></thead>
+        <tbody>
+          <tr><td>Parete sinistra della cucina (dall'ingresso allo smusso)</td><td class="n">222 cm</td><td class="src">quota SCIA</td></tr>
+          <tr><td>Smusso nell'angolo</td><td class="n">63 cm</td><td class="src ok">misurato in casa</td></tr>
+          <tr><td>Profondità massima della cucina</td><td class="n">271 cm</td><td class="src">quota SCIA</td></tr>
+          <tr><td>Larghezza della cucina in alto</td><td class="n">205 cm</td><td class="src">quota SCIA</td></tr>
+          <tr><td>Ingresso dal soggiorno</td><td class="n">105–107 cm</td><td class="src">quota SCIA</td></tr>
+          <tr><td>Finestra della cucina</td><td class="n">68 × 160 cm</td><td class="src">quota SCIA, posizione in scala</td></tr>
+          <tr><td>Veranda (interno)</td><td class="n">≈ 132 × 139 cm</td><td class="src">misurata in scala</td></tr>
+          <tr><td>Lavasciuga normale</td><td class="n">60 × 60 × 85 cm</td><td class="src">misura tipica</td></tr>
+          <tr><td>Lavastoviglie</td><td class="n">60 × 60 × 85 cm</td><td class="src">misura tipica</td></tr>
+          <tr><td>Frigo slim (larghezza × profondità × altezza)</td><td class="n">47 × 51,1 × 150 cm</td><td class="src ok">indicato da voi</td></tr>
+          <tr><td>Soggiorno</td><td class="n">273 × 560 cm · 15,95 m²</td><td class="src">quote SCIA</td></tr>
+          <tr><td>Camera</td><td class="n">401 × 322 cm · 15,91 m²</td><td class="src">quote SCIA</td></tr>
+          <tr><td>Bagno · disimpegno</td><td class="n">3,43 m² · 1,33 m²</td><td class="src">superfici SCIA, forma in scala</td></tr>
+          <tr><td>Altezza interna</td><td class="n">306 cm</td><td class="src">quota SCIA</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+"use strict";
+/* ---------- dati (cm; x verso destra, y verso la finestra della cucina) ---------- */
+const H=306, SILL=105, WIN=[89,156], WIN_TOP=265, WT=12, TOP=91.8, CARC=88;
+const K={A:[0,0],B:[0,222],C:[39.6,271],D:[165,271],E:[205,266],F:[205,171],G:[173,171],Hh:[105,48],I:[105,0]};
+const kitchenFloor=[K.A,K.B,K.C,K.D,K.E,K.F,K.G,K.Hh,K.I];
+const verandaFloor=[[205,171],[377,171],[377,310],[245,310],[245,266],[205,266]];
+const kitchenWalls=[[K.A,K.B],[K.B,K.C],[K.C,K.D,{ops:[[WIN[0]-K.C[0],WIN[1]-K.C[0],SILL,WIN_TOP]]}],[K.D,K.E],[K.F,K.G],[K.G,K.Hh],[K.Hh,K.I]];
+const verandaWalls=[[[205,266],[245,266]],[[245,266],[245,310]],[[245,310],[377,310],{ops:[[30,132,96,220]]}],[[377,310],[377,171]],[[377,171],[205,171],{ops:[[72,119,100,258]]}]];
+/* resto della casa (in scala dalla tavola SCIA) */
+const ROOMS=[
+ {name:"Soggiorno",area:"15,95 m²",lab:[-78,-190],ref:[-80,-250],col:"#ECE6DA",
+  poly:[[-168,-14],[0,-14],[0,0],[105,0],[105,-276],[230,-276],[230,-419],[147.5,-419],[12,-419],[12,-574],[-168,-574]],
+  edges:{0:[[23,123,0,249]],2:"open",4:[[63,125,0,210]],5:[[29,119,0,215]],6:"open"}},
+ {name:"Ingresso",lab:[172,-352],label:true},
+ {name:"Camera",area:"15,91 m²",lab:[30,-760],ref:[30,-760],col:"#E9E4EA",
+  poly:[[-171.4,-598],[22.6,-598],[22.6,-462.4],[147.7,-462.4],[147.7,-419],[230,-419],[230,-920],[-171.4,-920]],
+  edges:{4:"open",6:[[160,260,0,249]]}},
+ {name:"Bagno",area:"3,43 m²",lab:[205,72],ref:[200,40],col:"#E1E8EA",
+  poly:[[175.7,147.7],[317,149],[281,113],[268,73],[262,25],[250,0],[242.6,-20],[242.6,-149],[150,-149],[150,-103],[117.5,-103],[117.5,-9.3],[147.7,-9.3],[147.7,49.5],[134.8,49.5]],
+  edges:{0:[[82.3,129.3,100,258]],7:[[20.6,90.6,0,210]]}},
+ {name:"Dis.",area:"1,33 m²",lab:[182,-205],ref:[180,-213],col:"#E1E8EA",
+  poly:[[115.4,-160],[249,-160],[249,-266],[115.4,-266]],
+  edges:{0:[[36.6,106.6,0,210]],2:[[19,81,0,210]]}}
+];
+const BALC=[
+ {poly:[[-198,56],[-34,56],[-34,146],[-198,146]],rail:[[[-198,146],[-34,146]]],lab:[-92,101]},
+ {poly:[[-72,-1053],[93,-1053],[93,-974],[-72,-974]],rail:[[[-72,-974],[-72,-1053]],[[-72,-1053],[93,-1053]],[[93,-1053],[93,-974]]],lab:[10,-1013]}
+];
+const PASS=[[[-145,-14],[-45,56]],[[-30,-976],[70,-920]],[[0,-14],[105,0]],[[168,-276],[230,-266]],[[152,-160],[222,-149]],[[230,-395],[242,-305]]];
+const OUT=[[-229.6,56],[-32,56],[-32,215],[28,294],[233,294],[233,322],[389,322],[389,159],[329,150],[293,113],[280,73],[274,25],[262,0],[254,-20],[261,-150],[261,-278],[242,-278],[242,-976],[-229.6,-976]];
+const RECESS=[[-198,56],[-34,56],[-34,146],[-198,146]], ARM=[-196,-150,58,144];
+const PF=[{x0:-145,x1:-45,y:35,dir:-1},{x0:-30,x1:70,y:-962,dir:1}];
+const PIER=[[105,-9.3],[147.7,-9.3],[147.7,49.5],[134.8,49.5],[105,48]], NOTCH=[[105,-149],[150,-149],[150,-103],[105,-103]];
+const WINS2D=[[[WIN[0],271],[WIN[1],294]],[[275,310],[377,322]],[[258,149],[305,171]]];
+
+// angolo smussato: u lungo il muro (da B a C), n verso la stanza
+const SL=Math.hypot(K.C[0]-K.B[0],K.C[1]-K.B[1]);
+const u=[(K.C[0]-K.B[0])/SL,(K.C[1]-K.B[1])/SL], n=[u[1],-u[0]];
+const DA=Math.atan2(u[1],u[0]);
+const onD=(s,d)=>[K.B[0]+u[0]*s+n[0]*d, K.B[1]+u[1]*s+n[1]*d];
+// prova: mobile del forno appoggiato allo smusso; a destra mobili profondi 37 cm per non ostacolare lo sportello
+const S0=1.5, S1=61.5, SM=31.5, DF=61.8;
+const RUN_L=[110,170], SINK_X0=88, WIN_D=37;
+const WT_YL=222+(S0-u[0]*63.5)/u[1], WT_F=onD(S1,DF+1.7)[1];
+const yDE=x=>K.D[1]-(x-K.D[0])*(K.D[1]-K.E[1])/(K.E[0]-K.D[0]);
+const worktopFor=w=>{ const x1=SINK_X0+w; return [[0,RUN_L[0]],[63.5,RUN_L[0]],[63.5,WT_YL],onD(S0,DF+1.7),onD(S1,DF+1.7),[x1,WT_F]].concat(x1>K.D[0]?[[x1,yDE(x1)],[K.D[0],271]]:[[x1,271]],[[39.6,271],[0,222]]); };
+const WASH=[317,377,171,237], WZ=90; // colonna: lavastoviglie a terra, lavasciuga sopra su ripiano a 90 cm
+const FRIDGE={d:51.1,w:47,h:150,gap:5}; const FRY=[RUN_L[0]-FRIDGE.w,RUN_L[0]], FX=[FRIDGE.gap,FRIDGE.gap+FRIDGE.d];
+let sinkW=80, planMode="kitchen";
+const css=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+
+/* ---------- 2D ---------- */
+function plan2D(){
+  const Y=y=>330-y, f=v=>v.toFixed(1);
+  const pts=a=>a.map(p=>f(p[0])+","+f(Y(p[1]))).join(" ");
+  const rect=(a,b,extra)=>`<rect x="${f(a[0])}" y="${f(Y(b[1]))}" width="${f(b[0]-a[0])}" height="${f(b[1]-a[1])}" ${extra}/>`;
+  const out=[];
+  const wallQuad=(p0,p1,ref)=>{
+    const dx=p1[0]-p0[0], dy=p1[1]-p0[1], L=Math.hypot(dx,dy); let nx=-dy/L, ny=dx/L;
+    const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2;
+    if((mx-ref[0])*nx+(my-ref[1])*ny<0){nx=-nx;ny=-ny;}
+    const ex=dx/L*WT/2, ey=dy/L*WT/2;
+    return `<polygon points="${pts([[p0[0]-ex,p0[1]-ey],[p1[0]+ex,p1[1]+ey],[p1[0]+ex+nx*WT,p1[1]+ey+ny*WT],[p0[0]-ex+nx*WT,p0[1]-ey+ny*WT]])}" fill="var(--wallink)"/>`;
+  };
+  const dim=(x0,y0,x1,y1,label)=>{
+    const dx=x1-x0, dy=y1-y0, L=Math.hypot(dx,dy), nx=-dy/L*4, ny=dx/L*4;
+    const tx=(x0+x1)/2, ty=(y0+y1)/2, rot=Math.abs(dx)>=Math.abs(dy)?0:-90;
+    return `<g stroke="var(--muted)" stroke-width=".7"><line x1="${x0}" y1="${Y(y0)}" x2="${x1}" y2="${Y(y1)}"/><line x1="${x0-nx}" y1="${Y(y0-ny)}" x2="${x0+nx}" y2="${Y(y0+ny)}"/><line x1="${x1-nx}" y1="${Y(y1-ny)}" x2="${x1+nx}" y2="${Y(y1+ny)}"/></g><text x="${tx}" y="${Y(ty)}" transform="rotate(${rot} ${tx} ${Y(ty)})" text-anchor="middle" dy="-3" class="dt">${label}</text>`;
+  };
+  const tag=(p,num,wall)=>`<g><circle cx="${f(p[0])}" cy="${f(Y(p[1]))}" r="7.5" fill="${wall?'var(--surface)':'var(--accent)'}" stroke="var(--accent)" stroke-width="1.3" ${wall?'stroke-dasharray="2.2 1.6"':''}/><text x="${f(p[0])}" y="${f(Y(p[1]))}" dy="3.3" text-anchor="middle" class="nt" fill="${wall?'var(--accent)':'var(--accent-ink)'}">${num}</text></g>`;
+  const rrect=(s0,s1,d0,d1)=>[onD(s0,d0),onD(s1,d0),onD(s1,d1),onD(s0,d1)];
+  const roomLab=(r)=>`<text x="${r.lab[0]}" y="${Y(r.lab[1])}" text-anchor="middle" class="room">${r.name}</text>`+(r.area?`<text x="${r.lab[0]}" y="${Y(r.lab[1])+(planMode==="house"?20:11)}" text-anchor="middle" class="ar">${r.area}</text>`:"");
+  // casa: massa muraria, poi pavimenti
+  out.push(`<polygon points="${pts(OUT)}" fill="var(--wallink)"/>`);
+  BALC.forEach(b=>{ out.push(`<polygon points="${pts(b.poly)}" fill="var(--floor2)" stroke="var(--muted)" stroke-width=".8"/>`); b.rail.forEach(r=>out.push(`<line x1="${r[0][0]}" y1="${Y(r[0][1])}" x2="${r[1][0]}" y2="${Y(r[1][1])}" stroke="var(--wallink)" stroke-width="3"/>`)); out.push(`<text x="${b.lab[0]}" y="${Y(b.lab[1])+3}" text-anchor="middle" class="room">Balcone</text>`); });
+  // balcone sul retro: muro a sinistra con armadio a muro
+  out.push(rect([-210,56],[-198,158],'fill="var(--wallink)"'));
+  out.push(rect([ARM[0],ARM[2]],[ARM[1],ARM[3]],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"'));
+  [1,2].forEach(i=>{const y=ARM[2]+(ARM[3]-ARM[2])*i/3; out.push(`<line x1="${ARM[1]-10}" y1="${f(Y(y))}" x2="${ARM[1]}" y2="${f(Y(y))}" stroke="var(--fg)" stroke-width=".6"/>`);});
+  { const ax=(ARM[0]+ARM[1])/2, ay=(ARM[2]+ARM[3])/2, hs=planMode==="house";
+    out.push(`<line x1="${ARM[1]-3}" y1="${Y(ARM[2])}" x2="${ARM[1]-3}" y2="${Y(ARM[3])}" stroke="var(--fg)" stroke-width=".6"/><text x="${ax}" y="${Y(ay)}" transform="rotate(-90 ${ax} ${Y(ay)})" text-anchor="middle" class="ap" style="font-size:${hs?9:6.5}px">ARMADIO A MURO</text><text x="${ax+(hs?11:8)}" y="${Y(ay)}" transform="rotate(-90 ${ax+(hs?11:8)} ${Y(ay)})" text-anchor="middle" class="ap" style="font-size:${hs?7.5:5.5}px">porte PVC bianco</text>`); }
+  PASS.forEach(p=>out.push(rect(p[0],p[1],'fill="var(--floor2)"')));
+  ROOMS.forEach(r=>{ if(r.poly) out.push(`<polygon points="${pts(r.poly)}" fill="var(--floor2)"/>`); });
+  out.push(`<polygon points="${pts(verandaFloor)}" fill="var(--veranda)"/>`);
+  out.push(`<polygon points="${pts(kitchenFloor)}" fill="var(--floor)"/>`);
+  kitchenWalls.forEach(w=>out.push(wallQuad(w[0],w[1],[100,180])));
+  [PIER,NOTCH].forEach(pp=>out.push(`<polygon points="${pts(pp)}" fill="url(#hatch)"/>`));
+  { const hs=planMode==="house", lx=126, ly=20; out.push(`<text x="${lx}" y="${Y(ly)}" transform="rotate(-90 ${lx} ${Y(ly)})" text-anchor="middle" class="ap" style="fill:var(--surface);font-size:${hs?8:6}px">muro portante</text>`); }
+  WINS2D.forEach(w=>{ out.push(rect(w[0],w[1],'fill="var(--surface)" stroke="var(--wallink)" stroke-width=".8"')); const my=(w[0][1]+w[1][1])/2; out.push(`<line x1="${w[0][0]}" y1="${Y(my)}" x2="${w[1][0]}" y2="${Y(my)}" stroke="var(--wallink)" stroke-width=".8"/>`); });
+  // porte finestre aperte e porta d'ingresso
+  const arcP=(c,a,b)=>{ const S=[a[0],Y(a[1])], E=[b[0],Y(b[1])], C=[c[0],Y(c[1])]; const cr=(S[0]-C[0])*(E[1]-C[1])-(S[1]-C[1])*(E[0]-C[0]); const r=Math.hypot(S[0]-C[0],S[1]-C[1]);
+    return `<path d="M${f(S[0])} ${f(S[1])} A${f(r)} ${f(r)} 0 0 ${cr>0?1:0} ${f(E[0])} ${f(E[1])}" fill="none" stroke="var(--fg)" stroke-width=".6" stroke-dasharray="2 1.5"/>`; };
+  const leaf2d=(h,closed,open)=>`<line x1="${f(h[0])}" y1="${f(Y(h[1]))}" x2="${f(open[0])}" y2="${f(Y(open[1]))}" stroke="var(--fg)" stroke-width="1.4"/>`+arcP(h,closed,open);
+  PF.forEach(d=>{ const L=(d.x1-d.x0)/2; out.push(`<line x1="${d.x0}" y1="${Y(d.y)}" x2="${d.x1}" y2="${Y(d.y)}" stroke="var(--fg)" stroke-width=".5"/>`);
+    out.push(leaf2d([d.x0,d.y],[d.x0+L,d.y],[d.x0,d.y+d.dir*L]),leaf2d([d.x1,d.y],[d.x1-L,d.y],[d.x1,d.y+d.dir*L])); });
+  out.push(leaf2d([230,-305],[230,-395],[140,-305]));
+  ROOMS.forEach(r=>out.push(roomLab(r)));
+  out.push(`<text x="311" y="${Y(292)}" text-anchor="middle" class="room">Veranda</text>`);
+  // pensili tratteggiati
+  out.push(`<rect x="0" y="${Y(RUN_L[1])}" width="38.8" height="${RUN_L[1]-RUN_L[0]}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
+  out.push(`<polygon points="${pts(rrect(SM-30,SM+30,0,50))}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
+  // ingombro sportello forno
+  out.push(`<polygon points="${pts(rrect(S0+1,S1-1,DF,DF+50))}" fill="var(--warn)" fill-opacity=".08" stroke="var(--warn)" stroke-width=".8" stroke-dasharray="3 2"/>`);
+  const ol=onD(SM,DF+42); out.push(`<text x="${f(ol[0])}" y="${f(Y(ol[1]))}" transform="rotate(${(-DA*180/Math.PI).toFixed(1)} ${f(ol[0])} ${f(Y(ol[1]))})" text-anchor="middle" class="pt" style="font-size:6px">sportello forno aperto</text>`);
+  // piano di lavoro e moduli
+  out.push(`<polygon points="${pts(worktopFor(sinkW))}" fill="var(--worktop)" fill-opacity=".55" stroke="var(--fg)" stroke-width="1"/>`);
+  out.push(`<g stroke="var(--fg)" stroke-width=".6" fill="none" stroke-dasharray="3 2"><polygon points="${pts(rrect(S0,S1,DF-61.8,DF))}"/><line x1="0" y1="${Y(RUN_L[1])}" x2="60" y2="${Y(RUN_L[1])}"/><line x1="${SINK_X0}" y1="${Y(271-WIN_D)}" x2="${SINK_X0}" y2="${Y(271)}"/></g>`);
+  out.push(`<polygon points="${pts(rrect(SM-29,SM+29,DF-56.8,DF-5.8))}" fill="none" stroke="var(--fg)" stroke-width=".8"/>`);
+  [[SM-14.5,DF-44.3],[SM+14.5,DF-44.3],[SM-14.5,DF-18.3],[SM+14.5,DF-18.3]].forEach((c,i)=>{const p=onD(c[0],c[1]); out.push(`<circle cx="${f(p[0])}" cy="${f(Y(p[1]))}" r="${i<2?9:11}" fill="none" stroke="var(--fg)" stroke-width=".8"/>`);});
+  // lavello sulla parete sinistra
+  out.push(`<rect x="10" y="${Y(RUN_L[1]-6)}" width="42" height="48" rx="6" fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"/><circle cx="31" cy="${Y((RUN_L[0]+RUN_L[1])/2)}" r="2.6" fill="none" stroke="var(--fg)" stroke-width=".8"/><circle cx="5" cy="${Y((RUN_L[0]+RUN_L[1])/2)}" r="1.8" fill="var(--fg)"/>`);
+  out.push(`<text x="${SINK_X0+sinkW/2}" y="${Y(249)}" text-anchor="middle" class="ap">BASE ${sinkW}</text>`);
+  // frigo slim all'ingresso, con apertura dello sportello
+  out.push(rect([FX[0],FRY[0]],[FX[1],FRY[1]],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"')+`<line x1="${f(FX[1]-3)}" y1="${f(Y(FRY[0]))}" x2="${f(FX[1]-3)}" y2="${f(Y(FRY[1]))}" stroke="var(--fg)" stroke-width=".6"/><text x="${f((FX[0]+FX[1])/2)}" y="${f(Y((FRY[0]+FRY[1])/2)+2)}" text-anchor="middle" class="ap">FRIGO</text>`);
+  out.push(arcP([FX[1],FRY[0]],[FX[1],FRY[1]],[FX[1]+FRIDGE.w,FRY[0]]));
+  // colonna in veranda: lavastoviglie a terra, lavasciuga sopra (fronti verso sinistra)
+  { const cy=(WASH[2]+WASH[3])/2;
+    out.push(rect([WASH[0]-60,WASH[2]+3],[WASH[0],WASH[3]-3],'fill="var(--warn)" fill-opacity=".08" stroke="var(--warn)" stroke-width=".8" stroke-dasharray="3 2"'));
+    out.push(`<text x="${WASH[0]-30}" y="${f(Y(cy)-2)}" text-anchor="middle" class="pt" style="font-size:6px">sportello</text><text x="${WASH[0]-30}" y="${f(Y(cy)+6)}" text-anchor="middle" class="pt" style="font-size:6px">lavastoviglie</text>`);
+    out.push(rect([WASH[0],WASH[2]],[WASH[1],WASH[3]],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"'));
+    [[WASH[2],WASH[2]+3],[WASH[3]-3,WASH[3]]].forEach(q=>out.push(rect([WASH[0],q[0]],[WASH[0]+3,q[1]],'fill="var(--fg)"')));
+    out.push(`<line x1="${WASH[0]+5}" y1="${f(Y(WASH[2]+14))}" x2="${WASH[0]+5}" y2="${f(Y(WASH[3]-14))}" stroke="var(--fg)" stroke-width="2"/><circle cx="${WASH[0]+26}" cy="${f(Y(cy+7))}" r="13" fill="none" stroke="var(--fg)" stroke-width=".8"/><text x="${WASH[0]+31}" y="${f(Y(WASH[2]+12))}" text-anchor="middle" class="ap">LAVASCIUGA</text><text x="${WASH[0]+31}" y="${f(Y(WASH[2]+5))}" text-anchor="middle" class="ap" style="font-size:5px">+ LAVASTOVIGLIE</text>`);
+  }
+  // numeri
+  out.push(tag([72,RUN_L[0]+14],1),tag(onD(S1-5,DF+9),2),tag([SINK_X0+sinkW-8,262],3),tag([19,RUN_L[0]+48],4,true),tag(onD(SM,25),5,true),tag([WASH[0]+20,WASH[3]+10],7),tag([WASH[0]+40,WASH[3]+10],9),tag([(FX[0]+FX[1])/2,FRY[0]+9],8));
+  // quote cucina
+  out.push(dim(-28,0,-28,RUN_L[0],String(Math.round(RUN_L[0]))),dim(-28,RUN_L[0],-28,RUN_L[1],"60"),dim(-50,0,-50,271,"271"));
+  out.push(dim(0,302,SINK_X0,302,String(Math.round(SINK_X0))),dim(SINK_X0,302,SINK_X0+sinkW,302,String(sinkW)),dim(SINK_X0+sinkW,302,205,302,String(Math.round(205-SINK_X0-sinkW))),dim(0,321,205,321,"205"),dim(SINK_X0+sinkW+12,271-WIN_D,SINK_X0+sinkW+12,271,String(WIN_D)));
+  if(planMode==="kitchen") out.push(dim(0,-14,105,-14,"105–107"));
+  const sm=onD(31.5,-14); out.push(`<text x="${f(sm[0])}" y="${f(Y(sm[1]))}" transform="rotate(${(-DA*180/Math.PI).toFixed(1)} ${f(sm[0])} ${f(Y(sm[1]))})" class="dt" text-anchor="middle" dy="3" fill="var(--surface)" style="fill:var(--surface)">63</text>`);
+  out.push(`<text x="${(WIN[0]+WIN[1])/2}" y="${Y(287)}" text-anchor="middle" class="dt" style="font-size:7px;fill:var(--wallink)">finestra 68</text>`);
+  // passaggi
+  const xd=y=>105+(y-48)*(68/123);
+  const arrow=(x0,y0,x1,y1,label,lx,ly,anchor)=>`<line x1="${f(x0)}" y1="${f(Y(y0))}" x2="${f(x1)}" y2="${f(Y(y1))}" stroke="var(--warn)" stroke-width="1" marker-start="url(#ah)" marker-end="url(#ah)"/><text x="${f(lx)}" y="${f(Y(ly))}" class="pt" text-anchor="${anchor||'middle'}">${label}</text>`;
+  { const fy=FRY[0]+3; out.push(arrow(FX[1],fy,xd(fy)-1,fy,"≈ "+Math.round(xd(fy)-FX[1]),(FX[1]+xd(fy))/2+4,fy-9)); }
+  const ay=RUN_L[0]+12; out.push(arrow(63.5,ay,xd(ay)-1,ay,"≈ "+Math.round(xd(ay)-63.5),(63.5+xd(ay))/2,ay+4));
+  const ce=SINK_X0+sinkW+1.8;
+  if(ce>=173) out.push(arrow(174.5,WT_F-1,174.5,172,"≈ "+Math.round(WT_F-171),179,200,"start"));
+  else out.push(arrow(ce+1,WT_F-1,172,172,"≈ "+Math.round(Math.hypot(173-ce,WT_F-171)),177,203,"start"));
+  const vb=planMode==="kitchen"?"-75 -14 470 494":"-245 -12 650 1410";
+  document.getElementById("v2d").innerHTML=`<svg viewBox="${vb}" role="img" aria-label="Pianta quotata della cucina e della casa"><defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--wallink)"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--surface)" stroke-width="1" stroke-opacity=".45"/></pattern><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="var(--warn)"/></marker></defs><style>.dt{font:500 8.5px var(--f-mono);fill:var(--fg)}.room{font:500 ${planMode==="house"?20:10}px var(--f-display);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}.ar{font:400 ${planMode==="house"?15:8}px var(--f-mono);fill:var(--muted)}.nt{font:600 8px var(--f-mono)}.ap{font:500 6px var(--f-mono);fill:var(--fg)}.pt{font:500 7.5px var(--f-mono);fill:var(--warn)}</style>${out.join("")}</svg>`;
+}
+
+/* ---------- tab e comandi 2D ---------- */
+const tab3d=document.getElementById("tab3d"), tab2d=document.getElementById("tab2d");
+const v3d=document.getElementById("v3d"), v2d=document.getElementById("v2d"), camBtns=document.getElementById("camBtns"), planBtns=document.getElementById("planBtns");
+function showTab(is3d){
+  tab3d.setAttribute("aria-selected",String(is3d)); tab2d.setAttribute("aria-selected",String(!is3d));
+  v3d.hidden=!is3d; v2d.hidden=is3d; camBtns.hidden=!is3d; planBtns.hidden=is3d;
+  try{localStorage.setItem("cucina-tab",is3d?"3d":"2d");}catch(e){}
+  if(is3d&&window.__resize3d) window.__resize3d();
+}
+tab3d.onclick=()=>showTab(true); tab2d.onclick=()=>showTab(false);
+function setPlan(m){ planMode=m; plan2D(); document.getElementById("planKitchen").setAttribute("aria-pressed",String(m==="kitchen")); document.getElementById("planHouse").setAttribute("aria-pressed",String(m==="house")); }
+document.getElementById("planKitchen").onclick=()=>setPlan("kitchen");
+document.getElementById("planHouse").onclick=()=>setPlan("house");
+try{ if(localStorage.getItem("cucina-tab")==="2d") showTab(false); }catch(e){}
+
+let sink3d=null;
+function setSink(w){
+  sinkW=w; plan2D();
+  document.getElementById("sinkDim").textContent=w+" × "+WIN_D+" × 80";
+  document.querySelectorAll("#sinkOpt button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.w===w)));
+  if(sink3d) sink3d(w);
+}
+document.querySelectorAll("#sinkOpt button").forEach(b=>b.onclick=()=>setSink(+b.dataset.w));
+plan2D();
+
+/* ---------- 3D ---------- */
+if(typeof THREE==="undefined"){ document.getElementById("glfail").hidden=false; document.getElementById("hint").hidden=true; return; }
+let renderer;
+try{ renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true}); }
+catch(e){ document.getElementById("glfail").hidden=false; document.getElementById("hint").hidden=true; return; }
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputEncoding=THREE.sRGBEncoding;
+v3d.insertBefore(renderer.domElement,v3d.firstChild);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(50,4/3,5,10000);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true; controls.dampingFactor=.08; controls.maxPolarAngle=Math.PI*.495; controls.minDistance=80; controls.maxDistance=3200;
+
+const toV=(x,y,z)=>new THREE.Vector3(x,z,-y);
+const mat=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.85,metalness:0},o||{}));
+function setBg(){ scene.background=new THREE.Color(css("--stage")); }
+setBg();
+const mq=window.matchMedia("(prefers-color-scheme: dark)"); if(mq.addEventListener) mq.addEventListener("change",setBg);
+new MutationObserver(setBg).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+scene.add(new THREE.HemisphereLight(0xffffff,0xb9b2a6,.75));
+const sun=new THREE.DirectionalLight(0xffffff,.6); sun.position.set(520,950,-180); sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-800,right:800,top:800,bottom:-800,near:50,far:3000});
+sun.target.position.set(60,0,380); scene.add(sun,sun.target);
+const fillL=new THREE.DirectionalLight(0xffffff,.28); fillL.position.set(-400,500,700); scene.add(fillL);
+
+function add(me,parent){ me.castShadow=true; me.receiveShadow=true; (parent||scene).add(me); return me; }
+function box(x0,x1,y0,y1,z0,z1,m,parent){
+  const me=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,z1-z0,y1-y0),m);
+  me.position.copy(toV((x0+x1)/2,(y0+y1)/2,(z0+z1)/2)); return add(me,parent);
+}
+function dbox(s0,s1,d0,d1,z0,z1,m,parent){
+  const me=new THREE.Mesh(new THREE.BoxGeometry(s1-s0,z1-z0,d1-d0),m);
+  const c=onD((s0+s1)/2,(d0+d1)/2); me.position.copy(toV(c[0],c[1],(z0+z1)/2)); me.rotation.y=DA; return add(me,parent);
+}
+function floorPoly(poly,color,z){
+  const s=new THREE.Shape(); poly.forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1]));
+  const g=new THREE.ShapeGeometry(s); g.rotateX(-Math.PI/2);
+  const m=new THREE.Mesh(g,mat(color)); m.position.y=z||0; m.receiveShadow=true; scene.add(m); return m;
+}
+floorPoly(OUT,"#9A9893",-.6);
+floorPoly(kitchenFloor,"#E7E1D6",0); floorPoly(verandaFloor,"#D9E1DC",0);
+ROOMS.forEach(r=>{ if(r.poly) floorPoly(r.poly,r.col,0); });
+PASS.forEach(p=>floorPoly([[p[0][0],p[0][1]],[p[1][0],p[0][1]],[p[1][0],p[1][1]],[p[0][0],p[1][1]]],"#E4DED2",.05));
+BALC.forEach(b=>floorPoly(b.poly,"#CFCBC3",-.3));
+
+
+/* muri con effetto "casa delle bambole" */
+const walls=[];
+function wall(p0,p1,ref,ops,h,thick,color){
+  ops=(ops||[]).slice().sort((a,b)=>a[0]-b[0]); h=h||H; thick=thick||WT;
+  const dx=p1[0]-p0[0], dy=p1[1]-p0[1], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+  let nx=-uy, ny=ux; const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2;
+  if((mx-ref[0])*nx+(my-ref[1])*ny<0){nx=-nx;ny=-ny;}
+  const m=mat(color||"#F4F3EF",{transparent:true,opacity:1});
+  const piece=(t0,t1,z0,z1)=>{ if(t1-t0<.5||z1-z0<.5) return;
+    const me=new THREE.Mesh(new THREE.BoxGeometry(t1-t0,z1-z0,thick),m);
+    const t=(t0+t1)/2; me.position.copy(toV(p0[0]+ux*t+nx*thick/2,p0[1]+uy*t+ny*thick/2,(z0+z1)/2)); me.rotation.y=Math.atan2(uy,ux); add(me); };
+  const e=thick/2; let cur=-e;
+  ops.forEach(o=>{ piece(cur,o[0],0,h); if(o[2]>0) piece(o[0],o[1],0,o[2]); if(o[3]<h) piece(o[0],o[1],o[3],h); cur=o[1]; });
+  piece(cur,L+e,0,h);
+  walls.push({mat:m,c:new THREE.Vector3(mx+nx*thick/2,0,-(my+ny*thick/2)),n:new THREE.Vector3(-nx,0,ny)});
+}
+kitchenWalls.forEach(w=>wall(w[0],w[1],[100,180],w[2]&&w[2].ops));
+verandaWalls.forEach(w=>wall(w[0],w[1],[310,240],w[2]&&w[2].ops));
+const SEC=120; // resto della casa: muri sezionati a 120 cm per vedere dentro
+ROOMS.forEach(r=>{ if(!r.poly) return; r.poly.forEach((p,i)=>{ const q=r.poly[(i+1)%r.poly.length], e=r.edges[i]; if(e==="open") return; wall(p,q,r.ref,(e||[]).map(o=>[o[0],o[1],o[2],Math.min(o[3],SEC)]),SEC,WT,"#E2DFD8"); }); });
+/* muro portante tra cucina e bagno (risega), a tutta altezza; risega verso il disimpegno sezionata */
+box(105,147.7,-9.3,48,0,H,mat("#F4F3EF")); box(105,134.8,48,49.5,0,H,mat("#F4F3EF"));
+/* nicchie delle porte finestre e rientranza sul retro (sezionate come il resto della casa) */
+const massM=mat("#E2DFD8");
+box(105,150,-149,-103,0,SEC,massM);
+box(-229.6,-145,-2,56,0,SEC,massM); box(-45,-12,-2,56,0,SEC,massM); box(-210,-198,56,158,0,SEC,massM);
+box(-229.6,-30,-976,-932,0,SEC,massM); box(70,242,-976,-932,0,SEC,massM);
+BALC.forEach(b=>b.rail.forEach(r=>wall(r[0],r[1],[(b.poly[0][0]+b.poly[2][0])/2,(b.poly[0][1]+b.poly[2][1])/2],[],100,5,"#6E726F")));
+
+/* finestra cucina */
+const glass=new THREE.MeshStandardMaterial({color:0xBFD8E6,transparent:true,opacity:.35,roughness:.1});
+const frameM=mat("#FFFFFF"), mid=(WIN[0]+WIN[1])/2, wy0=271+WT/2-2, wy1=271+WT/2+2;
+box(WIN[0],WIN[1],271+WT/2-.5,271+WT/2+.5,SILL,WIN_TOP,glass).castShadow=false;
+box(WIN[0],WIN[1],271,271+WT,SILL-3,SILL,mat("#D8D4CC"));
+[[WIN[0],WIN[0]+5],[WIN[1]-5,WIN[1]],[mid-2,mid+2]].forEach(q=>box(q[0],q[1],wy0,wy1,SILL,WIN_TOP,frameM));
+box(WIN[0],WIN[1],wy0,wy1,WIN_TOP-5,WIN_TOP,frameM); box(WIN[0],WIN[1],wy0,wy1,SILL,SILL+5,frameM);
+
+/* altre finestre (chiuse), porte finestre (aperte), porta d'ingresso */
+function winX(x0,x1,yc,z0,z1){ box(x0,x1,yc-.5,yc+.5,z0,z1,glass).castShadow=false; const m=(x0+x1)/2;
+  [[x0,x0+5],[x1-5,x1],[m-2,m+2]].forEach(q=>box(q[0],q[1],yc-2,yc+2,z0,z1,frameM)); box(x0,x1,yc-2,yc+2,z1-5,z1,frameM); box(x0,x1,yc-2,yc+2,z0,z0+5,frameM); }
+winX(275,377,316,96,220); winX(258,305,165,100,258);
+function leaf(xa,xb,y0,y1){ const ya=Math.min(y0,y1), yb=Math.max(y0,y1);
+  box(xa,xb,ya+4,yb-4,6,243,glass).castShadow=false; box(xa,xb,ya,ya+4,0,249,frameM); box(xa,xb,yb-4,yb,0,249,frameM); box(xa,xb,ya,yb,0,6,frameM); box(xa,xb,ya,yb,243,249,frameM); }
+PF.forEach(d=>{ const L=(d.x1-d.x0)/2; leaf(d.x0,d.x0+4,d.y,d.y+d.dir*L); leaf(d.x1-4,d.x1,d.y,d.y+d.dir*L);
+  box(d.x0-2,d.x0,d.y-2,d.y+2,0,249,frameM); box(d.x1,d.x1+2,d.y-2,d.y+2,0,249,frameM); box(d.x0-2,d.x1+2,d.y-2,d.y+2,245,249,frameM); });
+box(232,240,-394,-306,0,215,mat("#6B4F3A",{roughness:.6})); box(230,232,-318,-314,95,110,mat("#8E9592",{metalness:.6,roughness:.35}));
+/* armadio a muro con porte in PVC bianco, lungo il muro sinistro del balcone */
+box(ARM[0],ARM[1]-2,ARM[2],ARM[3],0,240,mat("#ECECEA"));
+[0,1,2].forEach(i=>{ const w=(ARM[3]-ARM[2])/3, y0=ARM[2]+w*i; box(ARM[1]-2,ARM[1],y0+.4,y0+w-.4,1,239,mat("#FAFAF8",{roughness:.4})); box(ARM[1],ARM[1]+1.2,y0+w-8,y0+w-6,110,130,mat("#B9BEBD",{metalness:.5,roughness:.4})); });
+
+/* mobili */
+const carcM=mat("#DEDDD7"), plinthM=mat("#3B403E"), handleM=mat("#8E9592",{metalness:.6,roughness:.35});
+const frontM=mat("#F2F1EC",{roughness:.6}), topM=mat("#C49A6C",{roughness:.55});
+const blackM=mat("#151718",{roughness:.25,metalness:.1}), steelM=mat("#B9BEBD",{metalness:.7,roughness:.3});
+const wallUnits=[]; const W=m=>{wallUnits.push(m);return m;};
+
+/* 1 · lavello sulla parete sinistra */
+box(0,55,RUN_L[0],RUN_L[1],0,8,plinthM);
+box(0,60,RUN_L[0],RUN_L[1],8,CARC,carcM);
+box(60,61.8,RUN_L[0]+.3,RUN_L[1]-.3,8.3,87.7,frontM); box(61.8,63,RUN_L[1]-8,RUN_L[1]-6,62,82,handleM);
+box(0,61.8,RUN_L[1],RUN_L[1]+1.8,0,CARC,frontM);
+box(8,54,RUN_L[0]+5,RUN_L[1]-5,TOP-.2,TOP+.4,steelM).castShadow=false;
+box(11,51,RUN_L[0]+8,RUN_L[1]-8,TOP+.4,TOP+.5,mat("#8A908E",{metalness:.6,roughness:.4}));
+(function(){ const yc=(RUN_L[0]+RUN_L[1])/2; const c=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.6,24,16),steelM); c.position.copy(toV(4,yc,TOP+12)); add(c);
+  const sp=new THREE.Mesh(new THREE.CylinderGeometry(1.1,1.1,16,12),steelM); sp.rotation.z=Math.PI/2; sp.position.copy(toV(11,yc,TOP+23)); add(sp); })();
+
+/* 2 · mobile in diagonale con forno e piano cottura */
+dbox(S0,S1,DF-61.8,DF-5,0,8,plinthM);
+dbox(S0,S1,DF-61.8,DF-1.8,8,CARC,carcM);
+dbox(S0+.3,S1-.3,DF-1.8,DF,8.3,27.7,frontM);
+dbox(SM-11,SM+11,DF,DF+1.2,22,23.5,handleM);
+dbox(S0+1,S1-1,DF-1.8,DF+.2,28.3,87.7,blackM);
+dbox(S0+6,S1-6,DF+.2,DF+1.7,80,81.5,steelM);
+dbox(SM-29,SM+29,DF-56.8,DF-5.8,TOP,TOP+.6,blackM);
+
+/* 3 · mobile da 40 con cassetti sotto la finestra, e piano di lavoro */
+const sinkGroups={};
+[80].forEach(w=>{
+  const g=new THREE.Group(); scene.add(g); sinkGroups[w]=g;
+  const x1=SINK_X0+w;
+  const yc=271-WIN_D, yf=yc-1.8;
+  box(SINK_X0,x1,yc+5,271,0,8,plinthM,g);
+  box(SINK_X0,x1,yc,271,8,CARC,carcM,g);
+  [[8.3,30],[30.3,58],[58.3,87.7]].forEach(z=>{ box(SINK_X0+.3,x1-.3,yf,yc,z[0],z[1],frontM,g); box((SINK_X0+x1)/2-16,(SINK_X0+x1)/2+16,yf-1.4,yf,z[1]-6,z[1]-4.5,handleM,g); });
+  box(SINK_X0-1.8,SINK_X0,yf,271,0,CARC,frontM,g);
+  box(x1,x1+1.8,yf,Math.min(271,yDE(x1+1.8)),0,CARC,frontM,g);
+  const s=new THREE.Shape(); worktopFor(w).forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1]));
+  const tg=new THREE.ExtrudeGeometry(s,{depth:TOP-CARC,bevelEnabled:false}); tg.rotateX(-Math.PI/2);
+  const tm=new THREE.Mesh(tg,topM); tm.position.y=CARC; add(tm,g);
+});
+
+/* pensili */
+W(box(0,37,RUN_L[0],RUN_L[1],140,240,carcM)); W(box(37,38.8,RUN_L[0]+.3,RUN_L[1]-.3,140.3,239.7,frontM)); W(box(38.8,40,RUN_L[0]+40,RUN_L[0]+44,142,170,handleM));
+// cappa a parete sullo smusso, sopra il piano cottura
+W(dbox(SM-30,SM+30,0,50,158,168,steelM)); W(dbox(SM-30,SM+30,1,49,157.5,158,mat("#2B2F2E",{roughness:.4}))); W(dbox(SM-12.5,SM+12.5,0,25,168,H,steelM));
+
+/* 8 · frigo slim alto all'ingresso */
+box(FX[0],FX[1]-1.6,FRY[0]+.2,FRY[1]-.2,1.5,FRIDGE.h,mat("#EDEFEE",{roughness:.45}));
+box(FX[1]-1.6,FX[1],FRY[0]+.4,FRY[1]-.4,2,FRIDGE.h-.5,mat("#F6F7F6",{roughness:.4}));
+box(FX[1],FX[1]+1.5,FRY[1]-5,FRY[1]-3,95,135,mat("#B9BEBD",{metalness:.6,roughness:.35}));
+[[FX[0]+3,FRY[0]+3],[FX[1]-6,FRY[0]+3],[FX[0]+3,FRY[1]-6],[FX[1]-6,FRY[1]-6]].forEach(q=>box(q[0],q[0]+3,q[1],q[1]+3,0,1.5,plinthM));
+
+/* 9 · lavastoviglie a terra e 7 · lavasciuga sopra, su ripiano in acciaio tassellato al muro con montanti davanti */
+{ const whiteM=mat("#F7F7F5",{roughness:.5}), colM=mat("#5E6462",{metalness:.5,roughness:.45}), greyM=mat("#C9CDCB"), cy=(WASH[2]+WASH[3])/2;
+  box(WASH[0]+1,WASH[1],WASH[2]+3.5,WASH[3]-3.5,0,85,whiteM);
+  box(WASH[0]+.4,WASH[0]+1,WASH[2]+4,WASH[3]-4,3,84,mat("#EEEFED",{roughness:.4}));
+  box(WASH[0],WASH[0]+.4,WASH[2]+12,WASH[3]-12,76,80,greyM);
+  box(WASH[0]-2,WASH[1],WASH[2],WASH[3],WZ-4,WZ,colM);
+  [[WASH[2],WASH[2]+3],[WASH[3]-3,WASH[3]]].forEach(q=>box(WASH[0]-2,WASH[0]+1,q[0],q[1],0,WZ-4,colM));
+  box(WASH[0],WASH[1],WASH[2]+3,WASH[3]-3,WZ,WZ+85,whiteM);
+  box(WASH[0]-.6,WASH[0],WASH[2]+4,WASH[3]-4,WZ+76,WZ+84,greyM);
+  const d=new THREE.Mesh(new THREE.CylinderGeometry(15,15,1.2,40),mat("#3C4442",{roughness:.2,metalness:.2})); d.rotation.z=Math.PI/2; d.position.copy(toV(WASH[0]-.6,cy,WZ+42)); add(d);
+  const r=new THREE.Mesh(new THREE.CylinderGeometry(11,11,1.4,40),mat("#9DB3BC",{roughness:.1,metalness:.3,transparent:true,opacity:.8})); r.rotation.z=Math.PI/2; r.position.copy(toV(WASH[0]-.8,cy,WZ+42)); add(r); }
+
+/* numeri ed etichette */
+function sprite(num,dashed){
+  const cv=document.createElement("canvas"); cv.width=cv.height=128; const x=cv.getContext("2d");
+  x.beginPath(); x.arc(64,64,54,0,Math.PI*2); x.fillStyle=dashed?"#FFFFFF":"#2F6B61"; x.fill();
+  x.lineWidth=8; x.strokeStyle="#2F6B61"; if(dashed) x.setLineDash([14,10]); x.stroke();
+  x.fillStyle=dashed?"#2F6B61":"#FFFFFF"; x.font="600 64px 'IBM Plex Mono', monospace"; x.textAlign="center"; x.textBaseline="middle"; x.fillText(String(num),64,68);
+  const t=new THREE.CanvasTexture(cv); t.encoding=THREE.sRGBEncoding;
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false})); s.scale.set(13,13,1); s.renderOrder=10; scene.add(s); return s;
+}
+const p2=onD(SM,DF+12), p5=onD(SM,25);
+const tags=[[1,72,RUN_L[0]+30,60],[2,p2[0],p2[1],60],[3,SINK_X0+30,222,60],[4,45,RUN_L[0]+30,190,true],[5,p5[0],p5[1],200,true],[7,WASH[0]-3,WASH[2]+11,WZ+70],[9,WASH[0]-3,WASH[2]+11,55],[8,(FX[0]+FX[1])/2,(FRY[0]+FRY[1])/2,FRIDGE.h+10]].map(a=>{const s=sprite(a[0],a[4]); s.position.copy(toV(a[1],a[2],a[3])); s.userData.wall=!!a[4]; s.userData.id=a[0]; return s;});
+function label(text,x,y,z,sc){
+  const cv=document.createElement("canvas"); cv.width=512; cv.height=96; const c=cv.getContext("2d");
+  c.font="500 44px Archivo, Arial, sans-serif"; c.fillStyle="#5D6B65"; c.textAlign="center"; c.textBaseline="middle"; c.fillText(text.toUpperCase(),256,50);
+  const t=new THREE.CanvasTexture(cv); t.encoding=THREE.sRGBEncoding;
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true})); sc=sc||1; s.scale.set(64*sc,12*sc,1); s.position.copy(toV(x,y,z)); scene.add(s); return s;
+}
+label("Veranda",300,290,1);
+ROOMS.forEach(r=>label(r.name,r.lab[0],r.lab[1],1,r.name.length>6?1.4:1.2));
+BALC.forEach(b=>label("Balcone",b.lab[0],b.lab[1],1));
+label("Armadio a muro",-173,101,250,1.2);
+
+sink3d=w=>{ Object.keys(sinkGroups).forEach(k=>sinkGroups[k].visible=(+k===w)); const t=tags.find(t=>t.userData.id===3); t.position.copy(toV(SINK_X0+w-10,222,60)); };
+sink3d(sinkW);
+
+/* punti di vista */
+const views={ camIn:{p:[30,170,215],t:[112,92,-175]}, camCorner:{p:[150,178,-130],t:[58,90,-203]}, camTop:{p:[380,580,250],t:[160,40,-170]}, camHouse:{p:[560,1250,1080],t:[40,0,380]} };
+function go(k){ const v=views[k]; camera.position.set(v.p[0],v.p[1],v.p[2]); controls.target.set(v.t[0],v.t[1],v.t[2]); controls.update();
+  Object.keys(views).forEach(id=>document.getElementById(id).setAttribute("aria-pressed",String(id===k))); }
+Object.keys(views).forEach(k=>document.getElementById(k).onclick=()=>go(k));
+go("camIn");
+controls.addEventListener("start",()=>Object.keys(views).forEach(id=>document.getElementById(id).setAttribute("aria-pressed","false")));
+
+document.querySelectorAll("#fronts .sw").forEach(b=>{ b.style.background=b.dataset.c;
+  b.onclick=()=>{ frontM.color.set(b.dataset.c); document.querySelectorAll("#fronts .sw").forEach(o=>o.setAttribute("aria-pressed",String(o===b))); }; });
+const optWall=document.getElementById("optWall"), optNum=document.getElementById("optNum");
+function vis(){ wallUnits.forEach(m=>m.visible=optWall.checked); tags.forEach(t=>t.visible=optNum.checked&&(!t.userData.wall||optWall.checked)); }
+optWall.onchange=vis; optNum.onchange=vis;
+
+function resize(){ const r=v3d.getBoundingClientRect(); if(!r.width) return; renderer.setSize(r.width,r.height,false); camera.aspect=r.width/r.height; camera.updateProjectionMatrix(); }
+window.__resize3d=resize;
+if(window.ResizeObserver) new ResizeObserver(resize).observe(v3d); else window.addEventListener("resize",resize);
+resize();
+
+const tmp=new THREE.Vector3();
+(function loop(){
+  requestAnimationFrame(loop); controls.update();
+  walls.forEach(w=>{ tmp.copy(camera.position).sub(w.c); tmp.y=0; const behind=tmp.dot(w.n)<-6, o=behind?.12:1; if(w.mat.opacity!==o){w.mat.opacity=o; w.mat.depthWrite=!behind;} });
+  renderer.render(scene,camera);
+})();
+})();
+</script>
+</body>
+</html>
