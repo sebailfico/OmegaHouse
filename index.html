@@ -175,7 +175,7 @@ td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:now
       <h2>Resto della casa</h2>
       <ul>
         <li>Ricavato dalla tavola della SCIA: soggiorno, ingresso, bagno, disimpegno, camera e balcone. Finestre chiuse, porte finestre aperte, porta d'ingresso.</li>
-        <li><b>Camera</b>: letto BRIMNES con contenitori e testiera, 234 × 166 cm per materasso 160 × 200, sulla parete sinistra e centrato, piedi verso il centro della stanza; ai lati restano circa 78 cm per parte. Sulla parete destra, dall'angolo della porta finestra, PAX 275 cm (moduli 50 + 100 + 75 + 50, profondo 58, alto 236). Il 75 prende un'anta da 50 e una da 25. Tra i piedi del letto e le ante chiuse restano circa 107 cm, circa 57 con un'anta da 50 aperta.</li>
+        <li><b>Camera</b>: letto BRIMNES con contenitori e testiera, 234 × 166 cm per materasso 160 × 200, sulla parete sinistra e centrato, piedi verso il centro della stanza; ai lati restano circa 78 cm per parte. Sulla parete destra PAX 275 cm, profondo 58 e alto 236. Dal lato dell'ingresso: due moduli da 50 con le ante che si aprono dal centro dei due; in mezzo il 75 con ante da 25 e 50 specchiate, aperte dal centro; in fondo, verso la porta finestra, il 100 con due ante da 50, anche queste dal centro. Tra i piedi del letto e le ante chiuse restano circa 107 cm, circa 57 con un'anta da 50 aperta.</li>
         <li>Sul retro il balcone resta: l'armadio a muro con porte in PVC bianco occupa solo il lato sinistro, lungo tutto il muro, e lascia libera la porta finestra. Profondità ipotizzata 46 cm.</li>
         <li>Le misure delle altre stanze sono in scala dal disegno e vanno verificate prima di arredarle.</li>
       </ul>
@@ -226,7 +226,7 @@ const ROOMS=[
   poly:[[-168,-14],[0,-14],[0,0],[105,0],[105,-276],[230,-276],[230,-419],[147.5,-419],[12,-419],[12,-574],[-168,-574]],
   edges:{0:[[23,123,0,249]],2:"open",4:[[63,125,0,210]],5:[[29,119,0,215]],6:"open"}},
  {name:"Ingresso",lab:[172,-352],label:true},
- {name:"Camera",area:"15,91 m²",lab:[116,-770],ref:[30,-760],col:"#E9E4EA",
+ {name:"Camera",area:"15,91 m²",lab:[104,-770],ref:[30,-760],col:"#E9E4EA",
   poly:[[-171.4,-598],[22.6,-598],[22.6,-462.4],[147.7,-462.4],[147.7,-419],[230,-419],[230,-920],[-171.4,-920]],
   edges:{4:"open",6:[[160,260,0,249]]}},
  {name:"Bagno",area:"3,43 m²",lab:[205,72],ref:[200,40],col:"#E1E8EA",
@@ -243,10 +243,12 @@ const BALC=[
 const PASS=[[[-145,-14],[-45,56]],[[-30,-976],[70,-920]],[[0,-14],[105,0]],[[168,-276],[230,-266]],[[152,-160],[222,-149]],[[230,-395],[242,-305]]];
 const OUT=[[-229.6,56],[-32,56],[-32,215],[28,294],[233,294],[233,322],[389,322],[389,159],[329,150],[293,113],[280,73],[274,25],[262,0],[254,-20],[261,-150],[261,-278],[242,-278],[242,-976],[-229.6,-976]];
 const RECESS=[[-198,56],[-34,56],[-34,146],[-198,146]], ARM=[-196,-150,58,144];
-// camera: BRIMNES con testiera sulla parete sinistra (piedi verso +x), PAX sulla parete destra dall'angolo della porta finestra
+// camera: BRIMNES con testiera sulla parete sinistra (piedi verso +x), PAX sulla parete destra: dal fondo (porta finestra) 100, 75, 50, 50 verso l'ingresso
 const BED={x0:-171.4,len:234,w:166,hb:28,yc:-759}; BED.x1=BED.x0+BED.len; BED.y0=BED.yc-BED.w/2; BED.y1=BED.yc+BED.w/2;
-const PAX={x0:172,x1:230,y0:-918,mods:[50,100,75,50],h:236}; PAX.y1=PAX.y0+PAX.mods.reduce((a,b)=>a+b,0);
-const PAXDOORS=(()=>{ const d=[]; let y=PAX.y0; PAX.mods.forEach(w=>{ const parts=w===100?[50,50]:w===75?[50,25]:[50]; parts.forEach((dw,i)=>{ const left=parts.length===1||i===0; d.push({ya:y,yb:y+dw,hinge:(parts.length===1||i===0)?y:y+dw}); y+=dw; }); }); return d; })();
+// moduli dal fondo verso l'ingresso; ante [larghezza, cerniera "a" = lato verso il fondo, "b" = lato verso l'ingresso]: tutte si aprono dal centro del gruppo
+const PAX={x0:172,x1:230,y0:-918,h:236,mods:[{w:100,d:[[50,"a"],[50,"b"]]},{w:75,d:[[50,"a"],[25,"b"]]},{w:50,d:[[50,"a"]]},{w:50,d:[[50,"b"]]}]};
+PAX.y1=PAX.y0+PAX.mods.reduce((a,m)=>a+m.w,0);
+const PAXDOORS=(()=>{ const out=[]; let y=PAX.y0; PAX.mods.forEach(m=>m.d.forEach(([w,h])=>{ out.push({ya:y,yb:y+w,hinge:h==="a"?y:y+w}); y+=w; })); return out; })();
 const PF=[{x0:-145,x1:-45,y:35,dir:-1},{x0:-30,x1:70,y:-962,dir:1}];
 const PIER=[[105,-9.3],[147.7,-9.3],[147.7,49.5],[134.8,49.5],[105,48]], NOTCH=[[105,-149],[150,-149],[150,-103],[105,-103]];
 const WINS2D=[[[WIN[0],271],[WIN[1],294]],[[275,310],[377,322]],[[258,149],[305,171]]];
@@ -314,9 +316,9 @@ function plan2D(){
     [[B.y0+8,B.yc-3],[B.yc+3,B.y1-8]].forEach(q=>out.push(`<rect x="${hx+8}" y="${Y(q[1])}" width="38" height="${q[1]-q[0]}" rx="8" fill="var(--surface)" stroke="var(--fg)" stroke-width=".7"/>`));
     const tx=(hx+66+B.x1)/2; out.push(`<text x="${tx}" y="${Y(B.yc)+3}" text-anchor="middle" class="ap" style="font-size:${planMode==="house"?9:6}px">BRIMNES 160×200</text>`);
     const P=PAX; out.push(rect([P.x0-2,P.y0],[P.x1,P.y1],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"'));
-    let y=P.y0; P.mods.forEach((w,i)=>{ y+=w; if(i<P.mods.length-1) out.push(`<line x1="${P.x0-2}" y1="${Y(y)}" x2="${P.x1}" y2="${Y(y)}" stroke="var(--fg)" stroke-width=".7"/>`); });
+    let y=P.y0; P.mods.forEach((m,i)=>{ y+=m.w; if(i<P.mods.length-1) out.push(`<line x1="${P.x0-2}" y1="${Y(y)}" x2="${P.x1}" y2="${Y(y)}" stroke="var(--fg)" stroke-width=".7"/>`); });
     PAXDOORS.forEach(d=>{ const free=d.hinge===d.ya?d.yb:d.ya, w=d.yb-d.ya; out.push(arcP([P.x0-2,d.hinge],[P.x0-2,free],[P.x0-2-w,d.hinge])); });
-    const px=(P.x0+P.x1)/2-1, py=(P.y0+P.y1)/2; out.push(`<text x="${px}" y="${Y(py)}" transform="rotate(-90 ${px} ${Y(py)})" text-anchor="middle" class="ap" dy="3" style="font-size:${planMode==="house"?9:6}px">PAX 275 · 50+100+75+50</text>`);
+    const px=(P.x0+P.x1)/2-1, py=(P.y0+P.y1)/2; out.push(`<text x="${px}" y="${Y(py)}" transform="rotate(-90 ${px} ${Y(py)})" text-anchor="middle" class="ap" dy="3" style="font-size:${planMode==="house"?9:6}px">PAX 275 · 100+75+50+50</text>`);
   }
   kitchenWalls.forEach(w=>out.push(wallQuad(w[0],w[1],[100,180])));
   [PIER,NOTCH].forEach(pp=>out.push(`<polygon points="${pts(pp)}" fill="url(#hatch)"/>`));
