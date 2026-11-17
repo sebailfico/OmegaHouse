@@ -31,13 +31,28 @@ body{margin:0}
   color-scheme:dark}
 [hidden]{display:none!important}
 body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
-.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px;display:grid;gap:24px}
+.wrap{max-width:1400px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px;display:grid;gap:24px}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
 h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,38px);line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
 .sub{margin:6px 0 0;color:var(--muted);max-width:62ch}
 .badge{font-family:var(--f-mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--warn);background:var(--warn-bg);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);padding:5px 10px;border-radius:999px;white-space:nowrap}
-.grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:24px;align-items:start}
+.grid{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(0,1fr);gap:24px;align-items:start}
+.parts{display:grid;gap:12px}
+.parts h3{margin:6px 0 -2px}
+.pg{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:7px}
+.pg-h{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start}
+.pg-h b{font-weight:600}
+.pg-h p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.pi{list-style:none;margin:0;padding:0 0 0 38px;display:grid;gap:6px}
+.pi li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 10px;font-size:13.5px;line-height:1.35}
+.pi .q{font:12px/1.35 var(--f-mono);color:var(--muted);text-align:right;white-space:nowrap}
+.pi .cd{grid-column:1/-1;font:500 12px/1.3 var(--f-mono);color:var(--accent)}
+.pi .cd a{color:inherit;text-underline-offset:2px}
+.pi li.alt{opacity:.75}
+.chip.alt{color:var(--muted);background:var(--stage)}
+tr.grp td{font-weight:600;background:color-mix(in srgb,var(--stage) 60%,transparent)}
 @media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+@media (min-width:901px){.viewer{position:sticky;top:12px}}
 .viewer{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0}
 .bar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
 .tabs,.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -53,6 +68,9 @@ button[aria-pressed="true"],button[aria-selected="true"]{background:var(--accent
 #v2d.panning svg{cursor:grabbing}
 .hint{position:absolute;left:10px;bottom:8px;font:12px/1.3 var(--f-mono);color:var(--muted);pointer-events:none}
 .fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
+.leg2d{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;padding:8px 12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.leg2d span{display:inline-flex;align-items:center;gap:5px}
+.leg2d svg{width:12px;height:12px;flex:none}
 .foot{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;padding:10px 12px;border-top:1px solid var(--line);font-size:13px}
 .lbl{font:500 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .sw{width:26px;height:26px;padding:0;border-radius:50%;border:2px solid var(--line)}
@@ -100,9 +118,9 @@ tr.tot td{border-bottom:0;font-weight:600}
   <header>
     <div>
       <h1>Progetto cucina</h1>
-      <p class="sub">Proposta 7, in prova, con mobili IKEA METOD. Forno e piano a induzione appoggiati all'angolo smussato, lavello sulla parete sinistra, sotto la finestra un mobile da 80 cm profondo 37. Frigo slim alto all'ingresso della cucina. In veranda lavasciuga sopra la lavastoviglie, in colonna. In camera letto BRIMNES e armadio PAX, in soggiorno tavolo con 6 sedie e un armadio; resto della casa vuoto con finestre e porte.</p>
+      <p class="sub">Proposta 7 con mobili IKEA METOD, ante STENSUND verde chiaro e maniglie ENERYDA color ottone. Forno e piano a induzione appoggiati all'angolo smussato, lavello sulla parete sinistra, sotto la finestra un mobile da 80 cm profondo 37. Frigo combinato all'ingresso della cucina. In veranda lavasciuga sopra la lavastoviglie, in colonna. In camera letto BRIMNES e armadio PAX; resto della casa vuoto con finestre e porte.</p>
     </div>
-    <span class="badge">Bozza · misure provvisorie</span>
+    <span class="badge">Cucina: misure del rilievo</span>
   </header>
 
   <div class="grid">
@@ -116,6 +134,7 @@ tr.tot td{border-bottom:0;font-weight:600}
           <button id="camIn" aria-pressed="true">Dal soggiorno</button>
           <button id="camCorner" aria-pressed="false">Verso l'angolo</button>
           <button id="camTop" aria-pressed="false">Cucina dall'alto</button>
+          <button id="camLiving" aria-pressed="false">Soggiorno</button>
           <button id="camBed" aria-pressed="false">Camera</button>
           <button id="camHouse" aria-pressed="false">Tutta la casa</button>
         </div>
@@ -128,14 +147,20 @@ tr.tot td{border-bottom:0;font-weight:600}
         <div id="v3d" role="tabpanel" aria-labelledby="tab3d"><div class="fallback" id="glfail" hidden>Il 3D non si è caricato su questo dispositivo. Apri la pianta quotata.</div><span class="hint" id="hint">Trascina per ruotare · rotella o pizzico per lo zoom · resto della casa sezionato a 120 cm</span></div>
         <div id="v2d" role="tabpanel" aria-labelledby="tab2d" hidden></div>
       </div>
+      <div class="leg2d" id="leg2d" hidden>
+        <span class="lbl">Impianti dal rilievo</span>
+        <span><svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="#3E7CB1"/></svg>acqua</span>
+        <span><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1.5" width="9" height="9" fill="#fff" stroke="#3E7CB1" stroke-width="1.6"/><circle cx="6" cy="6" r="2" fill="#3E7CB1"/></svg>rubinetto acqua</span>
+        <span><svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="#3B403E"/><circle cx="6" cy="6" r="1.8" fill="#fff"/></svg>scarico</span>
+        <span><svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4" fill="#D29A1E"/></svg>uscita gas</span>
+        <span><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1.5" width="9" height="9" fill="#D29A1E"/></svg>rubinetto gas</span>
+        <span><svg viewBox="0 0 12 12" aria-hidden="true"><rect x="1.5" y="1.5" width="9" height="9" rx="1.5" fill="#fff" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="6" r="1.4" fill="currentColor"/></svg>presa</span>
+        <span><svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.6" fill="#fff" stroke="currentColor" stroke-width="1.1"/><path d="M3 3L9 9M3 9L9 3" stroke="currentColor" stroke-width="1.1"/></svg>punto luce</span>
+        <span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 11A10 10 0 0 1 11 1" fill="none" stroke="currentColor" stroke-width="1.1" stroke-dasharray="2 1.5"/></svg>apertura anta finestra</span>
+      </div>
       <div class="foot">
         <span class="lbl">Ante</span>
-        <div class="group" id="fronts">
-          <button class="sw" data-c="#F2F1EC" aria-pressed="true" title="Bianco opaco" aria-label="Ante bianco opaco"></button>
-          <button class="sw" data-c="#A7B5A0" aria-pressed="false" title="Verde salvia" aria-label="Ante verde salvia"></button>
-          <button class="sw" data-c="#B88A5B" aria-pressed="false" title="Effetto rovere" aria-label="Ante effetto rovere"></button>
-          <button class="sw" data-c="#4A5652" aria-pressed="false" title="Antracite" aria-label="Ante antracite"></button>
-        </div>
+        <span style="display:inline-flex;align-items:center;gap:7px"><span class="sw" style="display:inline-block;width:18px;height:18px;background:#BAC5B0" aria-hidden="true"></span>STENSUND verde chiaro · maniglie ENERYDA ottone</span>
         <label class="check"><input type="checkbox" id="optWall" checked> Pensili</label>
         <label class="check"><input type="checkbox" id="optNum" checked> Numeri</label>
       </div>
@@ -143,47 +168,39 @@ tr.tot td{border-bottom:0;font-weight:600}
 
     <aside>
       <h2>Componenti</h2>
-      <ul class="list">
-        <li><span class="num">1</span><div class="it"><b>Mobile base per lavello, parete sinistra</b> <span class="dim">60 × 60 × 80</span><p>Lavello a una vasca con rubinetto. Acqua e scarico vanno portati su questa parete.</p></div></li>
-        <li><span class="num">2</span><div class="it"><b>Mobile base con forno, contro l'angolo smussato</b> <span class="dim">60 × 60 × 80</span><p>Appoggiato al muro da 63 cm e parallelo a esso. Forno 60 cm con cassetto basso, sopra induzione 60 cm. Il mobile del lavello finisce prima dello smusso, così lo sportello del forno si apre senza toccarlo.</p></div></li>
-        <li><span class="num">3</span><div class="it"><b>Mobile base con cassetti, sotto la finestra</b> <span class="dim" id="sinkDim">80 × 37 × 80</span><p>Telaio METOD poco profondo (37 cm invece di 60), largo 80: va oltre la finestra. A destra del piano cottura non sporge davanti allo sportello del forno. Da 88 a 168 cm dalla parete sinistra.</p></div></li>
-        <li><span class="num wall">4</span><div class="it"><b>Pensile, 1 anta</b> <span class="dim">60 × 37 × 100</span><p>Sopra il lavello, da 140 a 240 cm da terra. Può essere un pensile scolapiatti.</p></div></li>
-        <li><span class="num wall">5</span><div class="it"><b>Cappa a parete sullo smusso</b> <span class="dim">60 × 50</span><p>Con il piano cottura contro il muro torna possibile una cappa a camino da 60 cm: lo smusso è largo 63. Fondo a circa 158 cm da terra.</p></div></li>
-        <li><span class="num plain">6</span><div class="it"><b>Piano di lavoro su misura</b> <span class="dim">prof. 63,5 e 41 · sp. 3,8</span><p>Un pezzo unico: profondo 63,5 sopra lavello e forno, 41 sotto la finestra. Davanti al piano cottura segue il bordo del mobile e non sporge. Copre anche l'angolo vuoto tra lavello e forno.</p></div></li>
-        <li><span class="num">8</span><div class="it"><b>Frigo slim alto</b> <span class="dim">47 × 51,1 × 150</span><p>Libera installazione, sulla parete sinistra subito dopo l'ingresso, accostato al mobile del lavello e staccato 5 cm dal muro per l'aerazione. Cerniera dal lato dell'ingresso.</p></div></li>
-        <li><span class="num">7</span><div class="it"><b>Lavasciuga normale in veranda, in alto</b> <span class="dim">60 × 60 × 85</span><p>Su un ripiano in acciaio a 90 cm, tassellato al muro di destra e con due montanti a terra sul davanti: non pesa sulla lavastoviglie. Oblò verso l'apertura della veranda, centro a circa 132 cm da terra. Colonna alta circa 175 cm.</p></div></li>
-        <li><span class="num">9</span><div class="it"><b>Lavastoviglie, sotto la lavasciuga</b> <span class="dim">60 × 60 × 85</span><p>A libera installazione, a terra tra i montanti. Lo sportello aperto occupa circa 60 cm verso l'apertura della veranda.</p></div></li>
-      </ul>
-      <p class="src">Struttura: telai METOD (base 80 cm + piedini 8 cm, piano finito a circa 92 cm). Ante, maniglie ed elettrodomestici a scelta: modelli e disponibilità da verificare sul sito o nel planner IKEA.</p>
+      <div class="parts" id="parts"></div>
+      <p class="src">Codici e prezzi IKEA Italia letti il 17 novembre 2026; i frigoriferi da negozi online. Gambe, cerniere e maniglie si vendono in confezioni da 2. Struttura: telai METOD su gambe da 8 cm, piano finito a circa 92 cm.</p>
     </aside>
   </div>
 
   <div class="notes">
     <section>
-      <h2>Cosa cambia</h2>
+      <h2>Cosa cambia con il rilievo</h2>
       <ul>
-        <li><b>Forno e piano cottura contro lo smusso</b>, paralleli al muro da 63 cm, con la cappa a parete sopra. Non c'è più il vano vuoto dietro il mobile.</li>
-        <li><b>Sotto la finestra</b> un mobile da 80 cm profondo 37, che va oltre la finestra e lascia libero lo sportello del forno. Il passaggio verso la veranda è di circa 59 cm (46 nella proposta 6).</li>
-        <li><b>In veranda</b> lavasciuga normale sopra la lavastoviglie, in colonna.</li>
-        <li><b>Lavello e frigo</b> si spostano di 12 cm verso la finestra: davanti al frigo restano circa 57 cm nel punto più stretto (prima 52), davanti al lavello circa 82 (prima 76). L'ingresso resta largo 105 cm.</li>
-        <li><b>Il prezzo</b>: tra lavello e forno resta un angolo di piano senza mobile sotto, e il piano sotto la finestra è meno profondo.</li>
+        <li><b>La cucina è più profonda</b> di quanto ricavato dalla SCIA: dalla parete sinistra all'apertura della veranda ci sono circa 229 cm (prima 205). Il muro della finestra è lungo 187,5 e non è a squadra: forma 91° con la parete sinistra.</li>
+        <li><b>Lo smusso è più inclinato</b> del previsto (angoli di 138,5° e 130,5°). Per lasciare libero lo sportello del forno, lavello e frigo scendono di 5 cm verso l'ingresso: il lavello ora va da 105 a 165 cm. Il piano sotto la finestra diventa profondo 42.</li>
+        <li><b>La finestra</b> è larga 85,5 e parte a 30 cm dallo smusso: davanzale a 84–86 cm, vetro da 95 a 257,5. È un'anta unica che si apre verso l'interno, con le cerniere dal lato della veranda: aperta passa circa 3 cm sopra il piano di lavoro (piano a 92, telaio a 95), quindi sotto la finestra non si possono lasciare oggetti alti.</li>
+        <li><b>Ingresso dal soggiorno</b>: 91 cm netti, dopo un muretto di 13,5. Tra lo spigolo del frigo e lo spigolo del muro all'ingresso restano circa 49 cm: è il punto più stretto della cucina.</li>
+        <li><b>Passaggi</b>: davanti al lavello circa 91 cm, che diventano circa 76 all'altezza del termoarredo; verso la veranda circa 52 (prima 59), tra il piano sotto la finestra e lo spigolo del muro del bagno. L'apertura della veranda è larga 77,5.</li>
+        <li><b>Termoarredo</b> sul muro diagonale verso il bagno, di fronte al lavello: tre gruppi di barre orizzontali raccordate da due collettori verticali. Nel rilievo è solo tratteggiato, senza quote: nel modello è largo circa 46 cm in scala dal disegno, alto 120, a 15 cm da terra e sporge 9 cm dal muro. Misure da confermare.</li>
       </ul>
     </section>
     <section class="todo">
-      <h2>Da misurare in casa</h2>
+      <h2>Da chiarire</h2>
       <ul>
-        <li>Distanza tra lo spigolo del muro del bagno e la parete della finestra.</li>
-        <li>Altezza del davanzale (qui 105 cm) e distanza della finestra dallo smusso.</li>
-        <li>Attacchi di acqua e scarico: il lavello ora è sulla parete sinistra; in veranda per lavasciuga e lavastoviglie.</li>
-        <li>Prese e linea elettrica: induzione, forno, lavasciuga e lavastoviglie insieme con un contatore da 3 kW richiedono un piano con limitatore di potenza.</li>
-        <li>Radiatore, altezza del soffitto, larghezza dell'apertura verso la veranda.</li>
+        <li><b>Termoarredo</b>: servono larghezza, altezza, altezza da terra, sporgenza dal muro e posizione esatta lungo il muro diagonale. Le pagine del rilievo che ho (pianta e prospetti A, B, C) non le riportano: forse sono in un prospetto del muro diagonale non fotografato.</li>
+        <li><b>Elemento tratteggiato</b> sugli ultimi 36 cm del muro della finestra, alto fino a circa 260, senza quote: chiedere al tecnico cos'è.</li>
+        <li><b>Prese</b>: le due prese della parete sinistra (82–112,5 cm dall'ingresso, a 110–118 da terra) finiscono dietro il frigo e sopra il piano di lavoro non ce ne sono. Vanno spostate o aggiunte; la linea per forno e induzione è da verificare con l'elettricista.</li>
+        <li><b>Gas</b>: l'uscita sul muro della finestra (5,5 cm dallo smusso, 63,5 da terra) resta chiusa nell'angolo tra il mobile del forno e quello sotto la finestra. Con l'induzione va chiusa e messa in sicurezza da un tecnico abilitato. Il rubinetto del gas a 105–115,5 cm, vicino alla veranda, resta libero.</li>
+        <li><b>Punto luce sullo smusso</b>, a 35 cm dallo spigolo verso la finestra: l'altezza non è quotata. Se è sopra i 168 cm finisce dietro il camino della cappa e può servire per alimentarla.</li>
+        <li><b>Veranda</b>: misure interne ancora in scala dalla SCIA; attacchi di acqua e scarico per lavasciuga e lavastoviglie da verificare.</li>
       </ul>
     </section>
     <section>
       <h2>Resto della casa</h2>
       <ul>
         <li>Ricavato dalla tavola della SCIA: soggiorno, ingresso, bagno, disimpegno, camera e balcone. Finestre chiuse, porte finestre aperte, porta d'ingresso.</li>
-        <li><b>Soggiorno</b> (posizioni provvisorie): tavolo 180 × 90 con 6 sedie, 3 per lato, nella parte larga verso la cucina. Tra il tavolo e il muro del bagno restano circa 71 cm di passaggio verso l'ingresso, dietro le sedie verso la porta finestra circa 51. Armadio 150 × 60 × 200 sulla parete verso la camera.</li>
+        <li><b>Colori</b>: bianco caldo (NCS S 0804-Y10R) ovunque; verde salvia (S 4010-G30Y) sulla parete della camera dietro il letto; terracotta (S 3040-Y60R, effetto calce nuvolato come nelle foto) sul fondo e sul lato della nicchia del soggiorno, sulla parete verso la cucina, sulla metà bassa del muretto tra antibagno e ingresso e in cucina sulla parete verso il balcone. Colori indicativi: provare i campioni.</li>
         <li><b>Camera</b>: letto BRIMNES con contenitori e testiera, 234 × 166 cm per materasso 160 × 200, sulla parete sinistra e centrato, piedi verso il centro della stanza; ai lati restano circa 78 cm per parte. Sulla parete destra PAX 275 cm, profondo 58 e alto 236. Dal lato dell'ingresso: due moduli da 50 con le ante che si aprono dal centro dei due; in mezzo il 75 con ante a specchio da 25 e 50, aperte dal centro; in fondo, verso la porta finestra, il 100 con due ante da 50, anche queste dal centro. Tra i piedi del letto e le ante chiuse restano circa 107 cm, circa 57 con un'anta da 50 aperta.</li>
         <li>Sul retro il balcone resta: l'armadio a muro con porte in PVC bianco occupa solo il lato sinistro, lungo tutto il muro, e lascia libera la porta finestra. Profondità ipotizzata 46 cm.</li>
         <li>Le misure delle altre stanze sono in scala dal disegno e vanno verificate prima di arredarle.</li>
@@ -197,20 +214,41 @@ tr.tot td{border-bottom:0;font-weight:600}
       <table>
         <thead><tr><th>Elemento</th><th>Misura</th><th>Fonte</th></tr></thead>
         <tbody>
-          <tr><td>Parete sinistra della cucina (dall'ingresso allo smusso)</td><td class="n">222 cm</td><td class="src">quota SCIA</td></tr>
-          <tr><td>Smusso nell'angolo</td><td class="n">63 cm</td><td class="src ok">misurato in casa</td></tr>
-          <tr><td>Profondità massima della cucina</td><td class="n">271 cm</td><td class="src">quota SCIA</td></tr>
-          <tr><td>Larghezza della cucina in alto</td><td class="n">205 cm</td><td class="src">quota SCIA</td></tr>
-          <tr><td>Ingresso dal soggiorno</td><td class="n">105–107 cm</td><td class="src">quota SCIA</td></tr>
-          <tr><td>Finestra della cucina</td><td class="n">68 × 160 cm</td><td class="src">quota SCIA, posizione in scala</td></tr>
-          <tr><td>Veranda (interno)</td><td class="n">≈ 132 × 139 cm</td><td class="src">misurata in scala</td></tr>
+          <tr><td>Parete sinistra della cucina (dall'ingresso allo smusso)</td><td class="n">221,5 cm</td><td class="src ok">rilievo 10/11/2026</td></tr>
+          <tr><td>Smusso nell'angolo</td><td class="n">63 cm · 138,5° e 130,5°</td><td class="src ok">rilievo</td></tr>
+          <tr><td>Muro della finestra (dallo smusso alla veranda)</td><td class="n">187,5 = 30 + 85,5 + 36 + 36</td><td class="src ok">rilievo</td></tr>
+          <tr><td>Finestra della cucina, anta unica verso l'interno</td><td class="n">85,5 × 162,5 cm · davanzale 84–86</td><td class="src ok">rilievo</td></tr>
+          <tr><td>Ingresso dal soggiorno</td><td class="n">91 cm + muretto 13,5</td><td class="src ok">rilievo</td></tr>
+          <tr><td>Apertura verso la veranda</td><td class="n">77,5 cm · spallette 8,5 e 7</td><td class="src ok">rilievo</td></tr>
+          <tr><td>Muro verso il bagno</td><td class="n">59 + 25 + 111 + 15 cm</td><td class="src ok">rilievo</td></tr>
+          <tr><td>Cucina: profondità massima e superficie</td><td class="n">≈ 229 cm · 4,4 m²</td><td class="src">calcolate dal rilievo</td></tr>
+          <tr><td>Veranda (interno)</td><td class="n">≈ 132 × 138 cm</td><td class="src">misurata in scala</td></tr>
           <tr><td>Lavasciuga normale</td><td class="n">60 × 60 × 85 cm</td><td class="src">misura tipica</td></tr>
           <tr><td>Lavastoviglie</td><td class="n">60 × 60 × 85 cm</td><td class="src">misura tipica</td></tr>
-          <tr><td>Frigo slim (larghezza × profondità × altezza)</td><td class="n">47 × 51,1 × 150 cm</td><td class="src ok">indicato da voi</td></tr>
+          <tr><td>Frigo Daya DMCB174MWE (larghezza × profondità × altezza)</td><td class="n">47 × 51,1 × 150 cm</td><td class="src ok">indicato da voi, come la scheda del venditore</td></tr>
+          <tr><td>Frigo Candy CCG1L314EW, alternativa</td><td class="n">47 × 49,5 × 144 cm</td><td class="src">scheda EPREL</td></tr>
+          <tr><td>Termoarredo sul muro diagonale</td><td class="n">≈ 46 × 120, sporge 9</td><td class="src">indicativo: tratteggio del rilievo senza quote</td></tr>
           <tr><td>Soggiorno</td><td class="n">273 × 560 cm · 15,95 m²</td><td class="src">quote SCIA</td></tr>
           <tr><td>Camera</td><td class="n">401 × 322 cm · 15,91 m²</td><td class="src">quote SCIA</td></tr>
           <tr><td>Bagno · disimpegno</td><td class="n">3,43 m² · 1,33 m²</td><td class="src">superfici SCIA, forma in scala</td></tr>
-          <tr><td>Altezza interna</td><td class="n">306 cm</td><td class="src">quota SCIA</td></tr>
+          <tr><td>Altezza interna</td><td class="n">305 cm</td><td class="src ok">rilievo (SCIA 306)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Impianti esistenti in cucina, dal rilievo</h3>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Muro</th><th>Cosa</th><th>Posizione</th><th>Da terra</th></tr></thead>
+        <tbody>
+          <tr><td>Sinistro</td><td>Acqua calda e fredda, scarico</td><td>133,5–158,5 cm dall'ingresso</td><td class="n">36–52 cm</td></tr>
+          <tr><td>Sinistro</td><td>2 rubinetti dell'acqua</td><td>11–22 e 94–105 cm dall'ingresso</td><td class="n">23,5–32 cm</td></tr>
+          <tr><td>Sinistro</td><td>2 prese</td><td>82–93,5 e 101–112,5 cm dall'ingresso</td><td class="n">110–118 cm</td></tr>
+          <tr><td>Sinistro e smusso</td><td>Piastrelle esistenti</td><td>da 73,5 cm dall'ingresso fino allo smusso</td><td class="n">86–147 cm</td></tr>
+          <tr><td>Smusso</td><td>Presa</td><td>6–18 cm dallo spigolo verso la finestra</td><td class="n">24,5–31,5 cm</td></tr>
+          <tr><td>Smusso</td><td>Punto luce</td><td>35 cm dallo spigolo verso la finestra</td><td class="n">non quotata</td></tr>
+          <tr><td>Finestra</td><td>Uscita gas</td><td>5,5 cm dallo smusso</td><td class="n">63,5 cm</td></tr>
+          <tr><td>Finestra</td><td>Rubinetto gas</td><td>36–49,5 cm dalla veranda</td><td class="n">105–115,5 cm</td></tr>
+          <tr><td>Finestra</td><td>Presa</td><td>11–22,5 cm dalla veranda</td><td class="n">122–130 cm</td></tr>
         </tbody>
       </table>
     </div>
@@ -218,7 +256,7 @@ tr.tot td{border-bottom:0;font-weight:600}
 
   <section class="costs" aria-labelledby="costsTitle">
     <h2 id="costsTitle">Costi</h2>
-    <p class="src">Prezzi IKEA Italia letti il 3 novembre 2026, IVA inclusa. Esclusi consegna, montaggio, interni del PAX (ripiani, aste, cassetti), coperte e cuscini, lavori di idraulico ed elettricista. Le righe <span class="chip">stima</span> non sono prezzi IKEA: sono ordini di grandezza da sostituire con il modello scelto.</p>
+    <p class="src">Prezzi IKEA Italia letti il 17 novembre 2026, IVA inclusa; frigoriferi da negozi online. Esclusi consegna, montaggio, interni del PAX (ripiani, aste, cassetti), coperte e cuscini, lavori di idraulico ed elettricista. Gambe, cerniere e maniglie sono contate a pezzo: si comprano in confezioni da 2. Le righe <span class="chip">stima</span> sono ordini di grandezza; la riga <span class="chip alt">alternativa</span> non entra nel totale.</p>
     <div class="tabs" role="tablist" aria-label="Costi per stanza" id="costTabs"></div>
     <div class="tbl" id="costTable" role="tabpanel"></div>
   </section>
@@ -230,24 +268,33 @@ tr.tot td{border-bottom:0;font-weight:600}
 (function(){
 "use strict";
 /* ---------- dati (cm; x verso destra, y verso la finestra della cucina) ---------- */
-const H=306, SILL=105, WIN=[89,156], WIN_TOP=265, WT=12, TOP=91.8, CARC=88;
-const K={A:[0,0],B:[0,222],C:[39.6,271],D:[165,271],E:[205,266],F:[205,171],G:[173,171],Hh:[105,48],I:[105,0]};
-const kitchenFloor=[K.A,K.B,K.C,K.D,K.E,K.F,K.G,K.Hh,K.I];
-const verandaFloor=[[205,171],[377,171],[377,310],[245,310],[245,266],[205,266]];
-const kitchenWalls=[[K.A,K.B],[K.B,K.C],[K.C,K.D,{ops:[[WIN[0]-K.C[0],WIN[1]-K.C[0],SILL,WIN_TOP]]}],[K.D,K.E],[K.F,K.G],[K.G,K.Hh],[K.Hh,K.I]];
-const verandaWalls=[[[205,266],[245,266]],[[245,266],[245,310]],[[245,310],[377,310],{ops:[[30,132,96,220]]}],[[377,310],[377,171]],[[377,171],[205,171],{ops:[[72,119,100,258]]}]];
+/* cucina dal rilievo del 10/11/2026: parete sinistra 221,5; smusso 63 con angoli di 138,5° e 130,5°;
+   parete della finestra 187,5 (30 + finestra 85,5 + 36 + 36); apertura verso la veranda 77,5 tra spallette di 8,5 e 7;
+   muro verso il bagno 59 + 25 + diagonale 111 + 15; ingresso 91 dopo un muretto di 13,5; altezza 305 */
+const H=305, SILL=85, WIN_FR=95, WIN_TOP=257.5, WINC=[30,115.5], WT=12, TOP=91.8, CARC=88;
+const rad=a=>a*Math.PI/180, along=(p,d,l)=>[p[0]+d[0]*l,p[1]+d[1]*l];
+const DS=[Math.sin(rad(41.5)),Math.cos(rad(41.5))], DC=[Math.sin(rad(91)),Math.cos(rad(91))];
+const K={A:[0,0],B:[0,221.5]}; K.C=along(K.B,DS,63); K.T=along(K.C,DC,187.5);
+K.V=[K.T[0],K.T[1]-93]; K.W1=[K.V[0]-59,K.V[1]]; K.W2=[K.W1[0],K.W1[1]-25];
+K.J1=[119.5,K.W2[1]-Math.sqrt(111*111-Math.pow(K.W2[0]-119.5,2))]; K.J2=[104.5,K.J1[1]]; K.I=[104.5,0];
+const LIP=8; // spessore delle spallette dell'apertura verso la veranda
+const kitchenFloor=[K.A,K.B,K.C,K.T,K.V,K.W1,K.W2,K.J1,K.J2,K.I];
+const verandaFloor=[K.V,[377,K.V[1]],[377,310],[245,310],[245,K.T[1]],K.T];
+// e: allungamento del muro alle due estremità (0 negli angoli rientranti, per non sporgere nella stanza)
+const kitchenWalls=[[K.A,K.B],[K.B,K.C],[K.C,K.T,{ops:[[WINC[0],WINC[1],SILL,WIN_TOP]]}],[K.V,K.W1,{e:[1,0]}],[K.W1,K.W2,{e:[0,1]}],[K.W2,K.J1],[K.J1,K.J2,{e:[1,0]}],[K.J2,K.I,{e:[0,1]}]];
+const verandaWalls=[[K.T,[245,K.T[1]]],[[245,K.T[1]],[245,310]],[[245,310],[377,310],{ops:[[30,132,96,220]]}],[[377,310],[377,K.V[1]]],[[377,K.V[1]],K.V,{ops:[[72,119,100,258]]}]];
 /* resto della casa (in scala dalla tavola SCIA) */
 const ROOMS=[
  {name:"Soggiorno",area:"15,95 m²",lab:[-78,-400],ref:[-80,-250],col:"#ECE6DA",
   poly:[[-168,-14],[0,-14],[0,0],[105,0],[105,-276],[230,-276],[230,-419],[147.5,-419],[12,-419],[12,-574],[-168,-574]],
-  edges:{0:[[23,123,0,249]],2:"open",4:[[63,125,0,210]],5:[[29,119,0,215]],6:"open"}},
+  edges:{0:[[23,123,0,249]],2:"open",4:[[63,125,0,210]],5:[[29,119,0,215]],6:"open"},thick:{1:13.5}},
  {name:"Ingresso",lab:[172,-352],label:true},
  {name:"Camera",area:"15,91 m²",lab:[104,-770],ref:[30,-760],col:"#E9E4EA",
   poly:[[-171.4,-598],[22.6,-598],[22.6,-462.4],[147.7,-462.4],[147.7,-419],[230,-419],[230,-920],[-171.4,-920]],
   edges:{4:"open",6:[[160,260,0,249]]}},
  {name:"Bagno",area:"3,43 m²",lab:[205,72],ref:[200,40],col:"#E1E8EA",
-  poly:[[175.7,147.7],[317,149],[281,113],[268,73],[262,25],[250,0],[242.6,-20],[242.6,-149],[150,-149],[150,-103],[117.5,-103],[117.5,-9.3],[147.7,-9.3],[147.7,49.5],[134.8,49.5]],
-  edges:{0:[[82.3,129.3,100,258]],7:[[20.6,90.6,0,210]]}},
+  poly:[[185.4,148],[317,149],[281,113],[268,73],[262,25],[250,0],[242.6,-20],[242.6,-149],[150,-149],[150,-103],[117.5,-103],[117.5,-9.3],[147.7,-9.3],[147.7,49.5],[134.8,49.5]],
+  edges:{0:[[72.6,119.6,100,258]],7:[[20.6,90.6,0,210]]}},
  {name:"Dis.",area:"1,33 m²",lab:[182,-205],ref:[180,-213],col:"#E1E8EA",
   poly:[[115.4,-160],[249,-160],[249,-266],[115.4,-266]],
   edges:{0:[[36.6,106.6,0,210]],2:[[19,81,0,210]]}}
@@ -256,7 +303,7 @@ const BALC=[
  {poly:[[-198,56],[-34,56],[-34,146],[-198,146]],rail:[[[-198,146],[-34,146]]],lab:[-92,101]},
  {poly:[[-72,-1053],[93,-1053],[93,-974],[-72,-974]],rail:[[[-72,-974],[-72,-1053]],[[-72,-1053],[93,-1053]],[[93,-1053],[93,-974]]],lab:[10,-1013]}
 ];
-const PASS=[[[-145,-14],[-45,56]],[[-30,-976],[70,-920]],[[0,-14],[105,0]],[[168,-276],[230,-266]],[[152,-160],[222,-149]],[[230,-395],[242,-305]]];
+const PASS=[[[-145,-14],[-45,56]],[[-30,-976],[70,-920]],[[13.5,-14],[104.5,0]],[[168,-276],[230,-266]],[[152,-160],[222,-149]],[[230,-395],[242,-305]]];
 const OUT=[[-229.6,56],[-32,56],[-32,215],[28,294],[233,294],[233,322],[389,322],[389,159],[329,150],[293,113],[280,73],[274,25],[262,0],[254,-20],[261,-150],[261,-278],[242,-278],[242,-976],[-229.6,-976]];
 const RECESS=[[-198,56],[-34,56],[-34,146],[-198,146]], ARM=[-196,-150,58,144];
 // camera: BRIMNES con testiera sulla parete sinistra (piedi verso +x), PAX sulla parete destra: dal fondo (porta finestra) 100, 75, 50, 50 verso l'ingresso
@@ -266,11 +313,36 @@ const PAX={x0:172,x1:230,y0:-918,h:236,mods:[{w:100,d:[[50,"a"],[50,"b"]]},{w:75
 PAX.y1=PAX.y0+PAX.mods.reduce((a,m)=>a+m.w,0);
 const PAXDOORS=(()=>{ const out=[]; let y=PAX.y0; PAX.mods.forEach(m=>m.d.forEach(([w,h,mi])=>{ out.push({ya:y,yb:y+w,hinge:h==="a"?y:y+w,mirror:!!mi}); y+=w; })); return out; })();
 // soggiorno: tavolo 180x90 con 3+3 sedie nella parte larga, armadio sulla parete verso la camera (posizioni provvisorie)
-const DIN={x0:-146,x1:34,y0:-195,y1:-105}; const CHAIRS=[-116,-56,4];
-const SWARD={x0:-156,x1:-6,y0:-574,y1:-514,h:200};
+// termoarredo sul muro diagonale (da K.J1 verso K.W2): posizione in scala dal tratteggio del rilievo, misure indicative
+const RAD={t:[62,108],d:[1.5,9],z:[15,135]};
+const DJ=[(K.W2[0]-K.J1[0])/111,(K.W2[1]-K.J1[1])/111], NJ=[-DJ[1],DJ[0]]; // lungo il muro diagonale e verso la cucina
+const radP=(t,d)=>[K.J1[0]+DJ[0]*t+NJ[0]*d, K.J1[1]+DJ[1]*t+NJ[1]*d];
+const FRONT_COL="#BAC5B0", BRASS="#C7A35A"; // STENSUND verde chiaro, ENERYDA color ottone
+const WALL_Z=155; // fondo dei pensili: 5 cm sopra il frigo alto 150
+// colori delle pareti (NCS, via di mezzo tra le palette): bianco caldo S 0804-Y10R, verde salvia S 4010-G30Y, terracotta S 3040-Y60R (nuvolato come nelle foto)
+const PAINT={white:"#EEE7D5",shade:"#E5DECB",green:"#8B9481",terra:"#C27354",terraLight:"#D89577",terraDark:"#A65E40"};
+// pareti colorate: stanza, lato del poligono, colore, tratto [t0,t1] e altezza [z0,z1] facoltativi
+const ACCENT=[
+ {room:"Camera",edge:7,col:"green",lab:"verde, dietro il letto"},
+ {room:"Soggiorno",edge:9,col:"terra",lab:"terracotta, fondo nicchia"},
+ {room:"Soggiorno",edge:8,col:"terra",lab:"terracotta, lato nicchia"},
+ {room:"Soggiorno",edge:0,col:"terra",lab:"terracotta, parete verso la cucina"},
+ {room:"Soggiorno",edge:1,col:"terra"},
+ {room:"Soggiorno",edge:4,col:"terra",t:[0,63],z:[0,153],lab:"terracotta, metà muretto"}
+];
+const KITCHEN_SFUMATO=0; // indice in kitchenWalls: parete verso il balcone
 const PF=[{x0:-145,x1:-45,y:35,dir:-1},{x0:-30,x1:70,y:-962,dir:1}];
-const PIER=[[105,-9.3],[147.7,-9.3],[147.7,49.5],[134.8,49.5],[105,48]], NOTCH=[[105,-149],[150,-149],[150,-103],[105,-103]];
-const WINS2D=[[[WIN[0],271],[WIN[1],294]],[[275,310],[377,322]],[[258,149],[305,171]]];
+const PIER=[[104.5,-9.3],[147.7,-9.3],[147.7,49.5],[134.8,49.5],K.J1,K.J2], NOTCH=[[105,-149],[150,-149],[150,-103],[105,-103]];
+const WINS2D=[[[275,310],[377,322]],[[258,149],[305,K.V[1]]]];
+// impianti esistenti dal rilievo. w: 0 parete sinistra (dall'ingresso), 1 smusso (dalla parete sinistra), 2 parete della finestra (dallo smusso); t lungo il muro, z altezza
+const IMP=[
+ {w:0,t:[11,22],z:[23.5,32],k:"valve"},{w:0,t:[94,105],z:[23.5,32],k:"valve"},
+ {w:0,t:[82,93.5],z:[110,118],k:"socket"},{w:0,t:[101,112.5],z:[110,118],k:"socket"},
+ {w:0,t:[135.5,139.5],z:[46.5,50.5],k:"water"},{w:0,t:[153,157],z:[46.5,50.5],k:"water"},{w:0,t:[143.5,148.5],z:[37,42],k:"drain"},
+ {w:1,t:[45,57],z:[24.5,31.5],k:"socket"},{w:1,t:[26.5,29.5],k:"light"},
+ {w:2,t:[4,7],z:[62,65],k:"gas"},{w:2,t:[138,151.5],z:[105,115.5],k:"gasvalve"},{w:2,t:[165,176.5],z:[122,130],k:"socket"}
+];
+const IMPCOL={valve:"#3E7CB1",water:"#3E7CB1",drain:"#3B403E",gas:"#D29A1E",gasvalve:"#D29A1E",socket:"#F4F4F2",light:"#F4F4F2"};
 
 // angolo smussato: u lungo il muro (da B a C), n verso la stanza
 const SL=Math.hypot(K.C[0]-K.B[0],K.C[1]-K.B[1]);
@@ -279,12 +351,20 @@ const DA=Math.atan2(u[1],u[0]);
 const onD=(s,d)=>[K.B[0]+u[0]*s+n[0]*d, K.B[1]+u[1]*s+n[1]*d];
 // prova: mobile del forno appoggiato allo smusso; a destra mobili profondi 37 cm per non ostacolare lo sportello
 const S0=1.5, S1=61.5, SM=31.5, DF=61.8;
-const RUN_L=[110,170], SINK_X0=88, WIN_D=37;
-const WT_YL=222+(S0-u[0]*63.5)/u[1], WT_F=onD(S1,DF+1.7)[1];
-const yDE=x=>K.D[1]-(x-K.D[0])*(K.D[1]-K.E[1])/(K.E[0]-K.D[0]);
-const worktopFor=w=>{ const x1=SINK_X0+w; return [[0,RUN_L[0]],[63.5,RUN_L[0]],[63.5,WT_YL],onD(S0,DF+1.7),onD(S1,DF+1.7),[x1,WT_F]].concat(x1>K.D[0]?[[x1,yDE(x1)],[K.D[0],271]]:[[x1,271]],[[39.6,271],[0,222]]); };
-const WASH=[317,377,171,237], WZ=90; // colonna: lavastoviglie a terra, lavasciuga sopra su ripiano a 90 cm
-const FRIDGE={d:51.1,w:47,h:150,gap:5}; const FRY=[RUN_L[0]-FRIDGE.w,RUN_L[0]], FX=[FRIDGE.gap,FRIDGE.gap+FRIDGE.d];
+// lavello e frigo 5 cm più verso l'ingresso: con lo smusso del rilievo lo sportello del forno resta libero
+const RUN_L=[105,165], SINK_X0=88, WIN_D=37;
+// parete della finestra: t lungo il muro dallo spigolo con lo smusso, d verso la stanza
+const nC=[DC[1],-DC[0]], DCA=Math.atan2(DC[1],DC[0]);
+const cP=(t,d)=>[K.C[0]+DC[0]*t+nC[0]*d, K.C[1]+DC[1]*t+nC[1]*d];
+const tOfX=x=>(x-K.C[0])/DC[0];
+const WT_YL=K.B[1]+(S0-u[0]*63.5)/u[1];
+// profondità del piano sotto la finestra: allineato al bordo davanti al mobile del forno
+const WD=(()=>{ const p=onD(S1,DF+1.7); return (p[0]-K.C[0])*nC[0]+(p[1]-K.C[1])*nC[1]; })();
+const worktopFor=w=>{ const t1=tOfX(SINK_X0+w); return [[0,RUN_L[0]],[63.5,RUN_L[0]],[63.5,WT_YL],onD(S0,DF+1.7),onD(S1,DF+1.7),cP(t1,WD),cP(t1,0),K.C,K.B]; };
+// lato della cucina verso il bagno: x del muro a una data y
+const xRoom=y=>y<K.J1[1]?K.I[0]:y<=K.W2[1]?K.J1[0]+(y-K.J1[1])*(K.W2[0]-K.J1[0])/(K.W2[1]-K.J1[1]):y<=K.V[1]?K.W2[0]:K.V[0];
+const WASH=[317,377,K.V[1],K.V[1]+66], WZ=90; // colonna: lavastoviglie a terra, lavasciuga sopra su ripiano a 90 cm
+const FRIDGE={d:51.1,w:47,h:150,gap:5}; const FCAB=[RUN_L[0]-60,RUN_L[0]]; /* pensile 60 sopra il frigo */ const FRY=[RUN_L[0]-FRIDGE.w,RUN_L[0]], FX=[FRIDGE.gap,FRIDGE.gap+FRIDGE.d];
 let sinkW=80, planMode="kitchen", view2d=null;
 const VB2D={kitchen:[-75,-14,470,494],house:[-245,-12,650,1410]};
 const css=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
@@ -295,12 +375,12 @@ function plan2D(){
   const pts=a=>a.map(p=>f(p[0])+","+f(Y(p[1]))).join(" ");
   const rect=(a,b,extra)=>`<rect x="${f(a[0])}" y="${f(Y(b[1]))}" width="${f(b[0]-a[0])}" height="${f(b[1]-a[1])}" ${extra}/>`;
   const out=[];
-  const wallQuad=(p0,p1,ref)=>{
+  const wallQuad=(p0,p1,ref,ee)=>{
     const dx=p1[0]-p0[0], dy=p1[1]-p0[1], L=Math.hypot(dx,dy); let nx=-dy/L, ny=dx/L;
     const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2;
     if((mx-ref[0])*nx+(my-ref[1])*ny<0){nx=-nx;ny=-ny;}
-    const ex=dx/L*WT/2, ey=dy/L*WT/2;
-    return `<polygon points="${pts([[p0[0]-ex,p0[1]-ey],[p1[0]+ex,p1[1]+ey],[p1[0]+ex+nx*WT,p1[1]+ey+ny*WT],[p0[0]-ex+nx*WT,p0[1]-ey+ny*WT]])}" fill="var(--wallink)"/>`;
+    const ex=dx/L*WT/2, ey=dy/L*WT/2, a=ee?ee[0]:1, b=ee?ee[1]:1;
+    return `<polygon points="${pts([[p0[0]-ex*a,p0[1]-ey*a],[p1[0]+ex*b,p1[1]+ey*b],[p1[0]+ex*b+nx*WT,p1[1]+ey*b+ny*WT],[p0[0]-ex*a+nx*WT,p0[1]-ey*a+ny*WT]])}" fill="var(--wallink)"/>`;
   };
   const dim=(x0,y0,x1,y1,label)=>{
     const dx=x1-x0, dy=y1-y0, L=Math.hypot(dx,dy), nx=-dy/L*4, ny=dx/L*4;
@@ -326,14 +406,6 @@ function plan2D(){
   const arcP=(c,a,b)=>{ const S=[a[0],Y(a[1])], E=[b[0],Y(b[1])], C=[c[0],Y(c[1])]; const cr=(S[0]-C[0])*(E[1]-C[1])-(S[1]-C[1])*(E[0]-C[0]); const r=Math.hypot(S[0]-C[0],S[1]-C[1]);
     return `<path d="M${f(S[0])} ${f(S[1])} A${f(r)} ${f(r)} 0 0 ${cr>0?1:0} ${f(E[0])} ${f(E[1])}" fill="none" stroke="var(--fg)" stroke-width=".6" stroke-dasharray="2 1.5"/>`; };
   const leaf2d=(h,closed,open)=>`<line x1="${f(h[0])}" y1="${f(Y(h[1]))}" x2="${f(open[0])}" y2="${f(Y(open[1]))}" stroke="var(--fg)" stroke-width="1.4"/>`+arcP(h,closed,open);
-  // soggiorno: tavolo, sedie, armadio
-  { const D=DIN; out.push(rect([D.x0,D.y0],[D.x1,D.y1],'fill="var(--worktop)" fill-opacity=".45" stroke="var(--fg)" stroke-width=".9"'));
-    CHAIRS.forEach(cx=>[[D.y1-8,D.y1+36,D.y1+36,D.y1+40],[D.y0-36,D.y0+8,D.y0-40,D.y0-36]].forEach(([s0,s1,b0,b1])=>{ out.push(rect([cx-22,s0],[cx+22,s1],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".7"')); out.push(rect([cx-22,b0],[cx+22,b1],'fill="var(--fg)"')); }));
-    const hs=planMode==="house"; out.push(`<text x="${(D.x0+D.x1)/2}" y="${Y((D.y0+D.y1)/2)+3}" text-anchor="middle" class="ap" style="font-size:${hs?9:6}px">TAVOLO 180×90</text>`);
-    const W=SWARD; out.push(rect([W.x0,W.y0],[W.x1,W.y1],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"'));
-    out.push(`<line x1="${W.x0}" y1="${Y(W.y1-3)}" x2="${W.x1}" y2="${Y(W.y1-3)}" stroke="var(--fg)" stroke-width=".6"/><line x1="${(W.x0+W.x1)/2}" y1="${Y(W.y1)}" x2="${(W.x0+W.x1)/2}" y2="${Y(W.y1-3)}" stroke="var(--fg)" stroke-width=".6"/>`);
-    out.push(`<text x="${(W.x0+W.x1)/2}" y="${Y((W.y0+W.y1)/2)+3}" text-anchor="middle" class="ap" style="font-size:${hs?9:6}px">ARMADIO 150</text>`);
-  }
   // camera: letto e armadio
   { const B=BED, hx=B.x0+B.hb;
     out.push(rect([B.x0,B.y0],[B.x1,B.y1],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"'));
@@ -349,10 +421,21 @@ function plan2D(){
     PAXDOORS.forEach(d=>{ const free=d.hinge===d.ya?d.yb:d.ya, w=d.yb-d.ya; out.push(arcP([P.x0-2,d.hinge],[P.x0-2,free],[P.x0-2-w,d.hinge])); });
     const px=(P.x0+P.x1)/2-1, py=(P.y0+P.y1)/2; out.push(`<text x="${px}" y="${Y(py)}" transform="rotate(-90 ${px} ${Y(py)})" text-anchor="middle" class="ap" dy="3" style="font-size:${planMode==="house"?9:6}px">PAX 275 · 100+75+50+50</text>`);
   }
-  kitchenWalls.forEach(w=>out.push(wallQuad(w[0],w[1],[100,180])));
+  kitchenWalls.forEach(w=>out.push(wallQuad(w[0],w[1],[100,180],w[2]&&w[2].e)));
+  // pareti colorate: striscia sul lato interno
+  { const strip=(p0,p1,ref,col,T)=>{ const dx=p1[0]-p0[0], dy=p1[1]-p0[1], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L; let nx=-uy, ny=ux; const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2; if((mx-ref[0])*nx+(my-ref[1])*ny>0){nx=-nx;ny=-ny;}
+      const a=T?T[0]:0, b=T?T[1]:L; out.push(`<line x1="${f(p0[0]+ux*a+nx*3.2)}" y1="${f(Y(p0[1]+uy*a+ny*3.2))}" x2="${f(p0[0]+ux*b+nx*3.2)}" y2="${f(Y(p0[1]+uy*b+ny*3.2))}" stroke="${col}" stroke-width="6"/>`); };
+    ACCENT.forEach(a=>{ const r=ROOMS.find(x=>x.name===a.room), p=r.poly[a.edge], q=r.poly[(a.edge+1)%r.poly.length]; strip(p,q,r.ref,PAINT[a.col],a.t); });
+    const kw=kitchenWalls[KITCHEN_SFUMATO]; strip(kw[0],kw[1],[100,180],PAINT.terra); }
   [PIER,NOTCH].forEach(pp=>out.push(`<polygon points="${pts(pp)}" fill="url(#hatch)"/>`));
   { const hs=planMode==="house", lx=126, ly=20; out.push(`<text x="${lx}" y="${Y(ly)}" transform="rotate(-90 ${lx} ${Y(ly)})" text-anchor="middle" class="ap" style="fill:var(--surface);font-size:${hs?8:6}px">muro portante</text>`); }
   WINS2D.forEach(w=>{ out.push(rect(w[0],w[1],'fill="var(--surface)" stroke="var(--wallink)" stroke-width=".8"')); const my=(w[0][1]+w[1][1])/2; out.push(`<line x1="${w[0][0]}" y1="${Y(my)}" x2="${w[1][0]}" y2="${Y(my)}" stroke="var(--wallink)" stroke-width=".8"/>`); });
+  // finestra della cucina sul muro inclinato: anta unica verso l'interno, cerniere dal lato veranda
+  { const a=cP(WINC[0],0), b=cP(WINC[1],0), a2=cP(WINC[0],-WT), b2=cP(WINC[1],-WT), m1=cP(WINC[0],-WT/2), m2=cP(WINC[1],-WT/2), op=cP(WINC[1],WINC[1]-WINC[0]);
+    out.push(`<polygon points="${pts([a,b,b2,a2])}" fill="var(--surface)" stroke="var(--wallink)" stroke-width=".8"/><line x1="${f(m1[0])}" y1="${f(Y(m1[1]))}" x2="${f(m2[0])}" y2="${f(Y(m2[1]))}" stroke="var(--wallink)" stroke-width=".8"/>`);
+    out.push(arcP(b,a,op)+`<line x1="${f(b[0])}" y1="${f(Y(b[1]))}" x2="${f(op[0])}" y2="${f(Y(op[1]))}" stroke="var(--fg)" stroke-width=".6" stroke-dasharray="2 1.5"/>`); }
+  // spallette dell'apertura verso la veranda e muretto all'ingresso della cucina
+  out.push(rect([K.V[0]-LIP,K.V[1]],[K.V[0],K.V[1]+8.5],'fill="var(--wallink)"'),rect([K.T[0]-LIP,K.T[1]-7],[K.T[0],K.T[1]+1],'fill="var(--wallink)"'),rect([0,-14],[13.5,0],'fill="var(--wallink)"'));
   // porte finestre aperte e porta d'ingresso
   PF.forEach(d=>{ const L=(d.x1-d.x0)/2; out.push(`<line x1="${d.x0}" y1="${Y(d.y)}" x2="${d.x1}" y2="${Y(d.y)}" stroke="var(--fg)" stroke-width=".5"/>`);
     out.push(leaf2d([d.x0,d.y],[d.x0+L,d.y],[d.x0,d.y+d.dir*L]),leaf2d([d.x1,d.y],[d.x1-L,d.y],[d.x1,d.y+d.dir*L])); });
@@ -361,21 +444,27 @@ function plan2D(){
   out.push(`<text x="311" y="${Y(292)}" text-anchor="middle" class="room">Veranda</text>`);
   // pensili tratteggiati
   out.push(`<rect x="0" y="${Y(RUN_L[1])}" width="38.8" height="${RUN_L[1]-RUN_L[0]}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
+  out.push(`<rect x="0" y="${Y(FCAB[1])}" width="38.8" height="${FCAB[1]-FCAB[0]}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
   out.push(`<polygon points="${pts(rrect(SM-30,SM+30,0,50))}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
   // ingombro sportello forno
   out.push(`<polygon points="${pts(rrect(S0+1,S1-1,DF,DF+50))}" fill="var(--warn)" fill-opacity=".08" stroke="var(--warn)" stroke-width=".8" stroke-dasharray="3 2"/>`);
   const ol=onD(SM,DF+42); out.push(`<text x="${f(ol[0])}" y="${f(Y(ol[1]))}" transform="rotate(${(-DA*180/Math.PI).toFixed(1)} ${f(ol[0])} ${f(Y(ol[1]))})" text-anchor="middle" class="pt" style="font-size:6px">sportello forno aperto</text>`);
   // piano di lavoro e moduli
   out.push(`<polygon points="${pts(worktopFor(sinkW))}" fill="var(--worktop)" fill-opacity=".55" stroke="var(--fg)" stroke-width="1"/>`);
-  out.push(`<g stroke="var(--fg)" stroke-width=".6" fill="none" stroke-dasharray="3 2"><polygon points="${pts(rrect(S0,S1,DF-61.8,DF))}"/><line x1="0" y1="${Y(RUN_L[1])}" x2="60" y2="${Y(RUN_L[1])}"/><line x1="${SINK_X0}" y1="${Y(271-WIN_D)}" x2="${SINK_X0}" y2="${Y(271)}"/></g>`);
+  out.push(`<g stroke="var(--fg)" stroke-width=".6" fill="none" stroke-dasharray="3 2"><polygon points="${pts(rrect(S0,S1,DF-61.8,DF))}"/><line x1="0" y1="${Y(RUN_L[1])}" x2="60" y2="${Y(RUN_L[1])}"/><line x1="${f(cP(tOfX(SINK_X0),0)[0])}" y1="${f(Y(cP(tOfX(SINK_X0),0)[1]))}" x2="${f(cP(tOfX(SINK_X0),WIN_D)[0])}" y2="${f(Y(cP(tOfX(SINK_X0),WIN_D)[1]))}"/></g>`);
   out.push(`<polygon points="${pts(rrect(SM-29,SM+29,DF-56.8,DF-5.8))}" fill="none" stroke="var(--fg)" stroke-width=".8"/>`);
   [[SM-14.5,DF-44.3],[SM+14.5,DF-44.3],[SM-14.5,DF-18.3],[SM+14.5,DF-18.3]].forEach((c,i)=>{const p=onD(c[0],c[1]); out.push(`<circle cx="${f(p[0])}" cy="${f(Y(p[1]))}" r="${i<2?9:11}" fill="none" stroke="var(--fg)" stroke-width=".8"/>`);});
   // lavello sulla parete sinistra
   out.push(`<rect x="10" y="${Y(RUN_L[1]-6)}" width="42" height="48" rx="6" fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"/><circle cx="31" cy="${Y((RUN_L[0]+RUN_L[1])/2)}" r="2.6" fill="none" stroke="var(--fg)" stroke-width=".8"/><circle cx="5" cy="${Y((RUN_L[0]+RUN_L[1])/2)}" r="1.8" fill="var(--fg)"/>`);
-  out.push(`<text x="${SINK_X0+sinkW/2}" y="${Y(249)}" text-anchor="middle" class="ap">BASE ${sinkW}</text>`);
+  { const bl=cP(tOfX(SINK_X0+sinkW/2),19); out.push(`<text x="${f(bl[0])}" y="${f(Y(bl[1]))}" text-anchor="middle" class="ap">BASE ${sinkW}</text>`); }
   // frigo slim all'ingresso, con apertura dello sportello
   out.push(rect([FX[0],FRY[0]],[FX[1],FRY[1]],'fill="var(--surface)" stroke="var(--fg)" stroke-width=".9"')+`<line x1="${f(FX[1]-3)}" y1="${f(Y(FRY[0]))}" x2="${f(FX[1]-3)}" y2="${f(Y(FRY[1]))}" stroke="var(--fg)" stroke-width=".6"/><text x="${f((FX[0]+FX[1])/2)}" y="${f(Y((FRY[0]+FRY[1])/2)+2)}" text-anchor="middle" class="ap">FRIGO</text>`);
   out.push(arcP([FX[1],FRY[0]],[FX[1],FRY[1]],[FX[1]+FRIDGE.w,FRY[0]]));
+  // termoarredo sul muro diagonale (misure indicative)
+  { const q=[radP(RAD.t[0],RAD.d[0]),radP(RAD.t[1],RAD.d[0]),radP(RAD.t[1],RAD.d[1]),radP(RAD.t[0],RAD.d[1])], ang=Math.atan2(-DJ[1],DJ[0])*180/Math.PI, lp=radP((RAD.t[0]+RAD.t[1])/2,RAD.d[1]+4);
+    out.push(`<polygon points="${pts(q)}" fill="var(--surface)" stroke="var(--fg)" stroke-width=".7" stroke-dasharray="2.5 1.5"/>`);
+    [.3,.5,.7].forEach(k=>{ const a=radP(RAD.t[0]+2,RAD.d[0]+(RAD.d[1]-RAD.d[0])*k), b=radP(RAD.t[1]-2,RAD.d[0]+(RAD.d[1]-RAD.d[0])*k); out.push(`<line x1="${f(a[0])}" y1="${f(Y(a[1]))}" x2="${f(b[0])}" y2="${f(Y(b[1]))}" stroke="var(--fg)" stroke-width=".35"/>`); });
+    out.push(`<text x="${f(lp[0])}" y="${f(Y(lp[1]))}" transform="rotate(${ang.toFixed(1)} ${f(lp[0])} ${f(Y(lp[1]))})" text-anchor="middle" class="ap" style="font-size:5px">TERMOARREDO (MISURE DA CONFERMARE)</text>`); }
   // colonna in veranda: lavastoviglie a terra, lavasciuga sopra (fronti verso sinistra)
   { const cy=(WASH[2]+WASH[3])/2;
     out.push(rect([WASH[0]-60,WASH[2]+3],[WASH[0],WASH[3]-3],'fill="var(--warn)" fill-opacity=".08" stroke="var(--warn)" stroke-width=".8" stroke-dasharray="3 2"'));
@@ -385,23 +474,34 @@ function plan2D(){
     out.push(`<line x1="${WASH[0]+5}" y1="${f(Y(WASH[2]+14))}" x2="${WASH[0]+5}" y2="${f(Y(WASH[3]-14))}" stroke="var(--fg)" stroke-width="2"/><circle cx="${WASH[0]+26}" cy="${f(Y(cy+7))}" r="13" fill="none" stroke="var(--fg)" stroke-width=".8"/><text x="${WASH[0]+31}" y="${f(Y(WASH[2]+12))}" text-anchor="middle" class="ap">LAVASCIUGA</text><text x="${WASH[0]+31}" y="${f(Y(WASH[2]+5))}" text-anchor="middle" class="ap" style="font-size:5px">+ LAVASTOVIGLIE</text>`);
   }
   // numeri
-  out.push(tag([72,RUN_L[0]+14],1),tag(onD(S1-5,DF+9),2),tag([SINK_X0+sinkW-8,262],3),tag([19,RUN_L[0]+48],4,true),tag(onD(SM,25),5,true),tag([WASH[0]+20,WASH[3]+10],7),tag([WASH[0]+40,WASH[3]+10],9),tag([(FX[0]+FX[1])/2,FRY[0]+9],8));
-  // quote cucina
-  out.push(dim(-28,0,-28,RUN_L[0],String(Math.round(RUN_L[0]))),dim(-28,RUN_L[0],-28,RUN_L[1],"60"),dim(-50,0,-50,271,"271"));
-  out.push(dim(0,302,SINK_X0,302,String(Math.round(SINK_X0))),dim(SINK_X0,302,SINK_X0+sinkW,302,String(sinkW)),dim(SINK_X0+sinkW,302,205,302,String(Math.round(205-SINK_X0-sinkW))),dim(0,321,205,321,"205"),dim(SINK_X0+sinkW+12,271-WIN_D,SINK_X0+sinkW+12,271,String(WIN_D)));
-  if(planMode==="kitchen") out.push(dim(0,-14,105,-14,"105–107"));
+  out.push(tag([72,RUN_L[0]+14],1),tag(onD(S1-5,DF+9),2),tag(cP(tOfX(SINK_X0+sinkW-11),27),3),tag([19,RUN_L[0]+48],4,true),tag([19,FCAB[0]+8],10,true),tag(onD(SM,25),5,true),tag([WASH[0]+20,WASH[3]+10],7),tag([WASH[0]+40,WASH[3]+10],9),tag([(FX[0]+FX[1])/2,FRY[0]+9],8));
+  // impianti esistenti dal rilievo (elettrici vicino al muro, acqua e gas un po' più dentro per non sovrapporli)
+  { const pos=(w,t,d)=>w===0?[d,t]:w===1?onD(t,d):cP(t,d);
+    IMP.forEach(m=>{ const el=m.k==="socket"||m.k==="light", p=pos(m.w,(m.t[0]+m.t[1])/2,el?3.2:8.5), x=p[0], y=Y(p[1]), c=IMPCOL[m.k];
+      if(m.k==="socket") out.push(`<rect x="${f(x-2)}" y="${f(y-2)}" width="4" height="4" rx=".6" fill="#fff" stroke="var(--fg)" stroke-width=".6"/><circle cx="${f(x)}" cy="${f(y)}" r=".7" fill="var(--fg)"/>`);
+      else if(m.k==="light") out.push(`<circle cx="${f(x)}" cy="${f(y)}" r="2.4" fill="#fff" stroke="var(--fg)" stroke-width=".6"/><path d="M${f(x-1.7)} ${f(y-1.7)}L${f(x+1.7)} ${f(y+1.7)}M${f(x-1.7)} ${f(y+1.7)}L${f(x+1.7)} ${f(y-1.7)}" stroke="var(--fg)" stroke-width=".6"/>`);
+      else if(m.k==="valve") out.push(`<rect x="${f(x-2)}" y="${f(y-2)}" width="4" height="4" fill="#fff" stroke="${c}" stroke-width=".9"/><circle cx="${f(x)}" cy="${f(y)}" r="1" fill="${c}"/>`);
+      else if(m.k==="gasvalve") out.push(`<rect x="${f(x-2)}" y="${f(y-2)}" width="4" height="4" fill="${c}" stroke="var(--fg)" stroke-width=".4"/>`);
+      else if(m.k==="drain") out.push(`<circle cx="${f(x)}" cy="${f(y)}" r="2.3" fill="${c}"/><circle cx="${f(x)}" cy="${f(y)}" r=".9" fill="#fff"/>`);
+      else out.push(`<circle cx="${f(x)}" cy="${f(y)}" r="2" fill="${c}" stroke="var(--fg)" stroke-width=".3"/>`); }); }
+  // quote cucina: misure del rilievo
+  const dimR=(a,b,label)=>{ const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy), nx=-dy/L*4, ny=dx/L*4;
+    let ang=Math.atan2(-dy,dx)*180/Math.PI; if(ang>90) ang-=180; if(ang<-90) ang+=180; const tx=(a[0]+b[0])/2, ty=Y((a[1]+b[1])/2);
+    return `<g stroke="var(--muted)" stroke-width=".7"><line x1="${f(a[0])}" y1="${f(Y(a[1]))}" x2="${f(b[0])}" y2="${f(Y(b[1]))}"/>`+[a,b].map(p=>`<line x1="${f(p[0]-nx)}" y1="${f(Y(p[1]-ny))}" x2="${f(p[0]+nx)}" y2="${f(Y(p[1]+ny))}"/>`).join("")+`</g><text x="${f(tx)}" y="${f(ty)}" transform="rotate(${ang.toFixed(1)} ${f(tx)} ${f(ty)})" text-anchor="middle" dy="-3" class="dt">${label}</text>`; };
+  out.push(dim(-28,0,-28,RUN_L[0],String(Math.round(RUN_L[0]))),dim(-28,RUN_L[0],-28,RUN_L[1],"60"),dim(-50,0,-50,K.B[1],"221,5"));
+  [[0,30,"30"],[30,115.5,"85,5"],[115.5,151.5,"36"],[151.5,187.5,"36"]].forEach(q=>out.push(dimR(cP(q[0],-32),cP(q[1],-32),q[2])));
+  { const x1=SINK_X0+sinkW, t1=tOfX(x1); out.push(dim(0,321,SINK_X0,321,String(Math.round(SINK_X0))),dim(SINK_X0,321,x1,321,String(sinkW)),dim(x1,321,K.V[0],321,String(Math.round(K.V[0]-x1))),dimR(cP(t1+5,WIN_D),cP(t1+5,0),String(WIN_D))); }
+  out.push(dimR([K.W2[0]+14*0.889,K.W2[1]-14*0.457],[K.J1[0]+14*0.889,K.J1[1]-14*0.457],"111"),dim(K.W1[0],K.V[1]+6,K.V[0],K.V[1]+6,"59"));
+  if(planMode==="kitchen") out.push(dim(13.5,-7,104.5,-7,"91"),dim(0,-24,13.5,-24,"13,5"),dimR([K.V[0]+9,K.T[1]-7],[K.V[0]+9,K.V[1]+8.5],"77,5"));
   const sm=onD(31.5,-14); out.push(`<text x="${f(sm[0])}" y="${f(Y(sm[1]))}" transform="rotate(${(-DA*180/Math.PI).toFixed(1)} ${f(sm[0])} ${f(Y(sm[1]))})" class="dt" text-anchor="middle" dy="3" fill="var(--surface)" style="fill:var(--surface)">63</text>`);
-  out.push(`<text x="${(WIN[0]+WIN[1])/2}" y="${Y(287)}" text-anchor="middle" class="dt" style="font-size:7px;fill:var(--wallink)">finestra 68</text>`);
+  { const wl=cP((WINC[0]+WINC[1])/2,-20); out.push(`<text x="${f(wl[0])}" y="${f(Y(wl[1]))}" text-anchor="middle" class="dt" style="font-size:6.5px;fill:var(--wallink)">finestra 85,5</text>`); }
   // passaggi
-  const xd=y=>105+(y-48)*(68/123);
   const arrow=(x0,y0,x1,y1,label,lx,ly,anchor)=>`<line x1="${f(x0)}" y1="${f(Y(y0))}" x2="${f(x1)}" y2="${f(Y(y1))}" stroke="var(--warn)" stroke-width="1" marker-start="url(#ah)" marker-end="url(#ah)"/><text x="${f(lx)}" y="${f(Y(ly))}" class="pt" text-anchor="${anchor||'middle'}">${label}</text>`;
-  { const fy=FRY[0]+3; out.push(arrow(FX[1],fy,xd(fy)-1,fy,"≈ "+Math.round(xd(fy)-FX[1]),(FX[1]+xd(fy))/2+4,fy-9)); }
-  const ay=RUN_L[0]+12; out.push(arrow(63.5,ay,xd(ay)-1,ay,"≈ "+Math.round(xd(ay)-63.5),(63.5+xd(ay))/2,ay+4));
-  const ce=SINK_X0+sinkW+1.8;
-  if(ce>=173) out.push(arrow(174.5,WT_F-1,174.5,172,"≈ "+Math.round(WT_F-171),179,200,"start"));
-  else out.push(arrow(ce+1,WT_F-1,172,172,"≈ "+Math.round(Math.hypot(173-ce,WT_F-171)),177,203,"start"));
+  { const a=[FX[1],FRY[0]], b=K.J2; out.push(arrow(a[0]+.8,a[1]-.2,b[0]-.8,b[1]+.2,"≈ "+Math.round(Math.hypot(b[0]-a[0],b[1]-a[1])),(a[0]+b[0])/2,(a[1]+b[1])/2+8)); }
+  { const c=radP(RAD.t[0],RAD.d[1]); out.push(arrow(63.5,c[1],c[0]-1,c[1],"≈ "+Math.round(c[0]-63.5),(63.5+c[0])/2,c[1]+4)); }
+  { const c=cP(tOfX(SINK_X0+sinkW),WD), g=K.W1; out.push(arrow(c[0],c[1]-1,g[0],g[1]+1,"≈ "+Math.round(Math.hypot(g[0]-c[0],g[1]-c[1])),g[0]+5,(c[1]+g[1])/2,"start")); }
   const vb=(view2d||VB2D[planMode]).map(n=>n.toFixed(1)).join(" ");
-  document.getElementById("v2d").innerHTML=`<span class="hint" style="z-index:1">Tasto destro per spostare · rotella o pizzico per lo zoom · doppio clic per tornare</span><svg viewBox="${vb}" role="img" aria-label="Pianta quotata della cucina e della casa"><defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--wallink)"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--surface)" stroke-width="1" stroke-opacity=".45"/></pattern><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="var(--warn)"/></marker></defs><style>.dt{font:500 8.5px var(--f-mono);fill:var(--fg)}.room{font:500 ${planMode==="house"?20:10}px var(--f-display);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}.ar{font:400 ${planMode==="house"?15:8}px var(--f-mono);fill:var(--muted)}.nt{font:600 8px var(--f-mono)}.ap{font:500 6px var(--f-mono);fill:var(--fg)}.pt{font:500 7.5px var(--f-mono);fill:var(--warn)}</style>${out.join("")}</svg>`;
+  document.getElementById("v2d").innerHTML=`<span class="hint" style="z-index:1">Tasto destro per spostare · rotella o pizzico per lo zoom · doppio clic per tornare</span><svg viewBox="${vb}" role="img" aria-label="Pianta quotata della cucina e della casa"><defs><linearGradient id="sfum" gradientUnits="userSpaceOnUse" x1="0" y1="${330-0}" x2="0" y2="${330-222}"><stop offset="0" stop-color="${PAINT.terra}"/><stop offset="1" stop-color="${PAINT.terraLight}"/></linearGradient><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--wallink)"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--surface)" stroke-width="1" stroke-opacity=".45"/></pattern><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 z" fill="var(--warn)"/></marker></defs><style>.dt{font:500 8.5px var(--f-mono);fill:var(--fg)}.room{font:500 ${planMode==="house"?20:10}px var(--f-display);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}.ar{font:400 ${planMode==="house"?15:8}px var(--f-mono);fill:var(--muted)}.nt{font:600 8px var(--f-mono)}.ap{font:500 6px var(--f-mono);fill:var(--fg)}.pt{font:500 7.5px var(--f-mono);fill:var(--warn)}</style>${out.join("")}</svg>`;
 }
 
 /* ---------- tab e comandi 2D ---------- */
@@ -409,7 +509,7 @@ const tab3d=document.getElementById("tab3d"), tab2d=document.getElementById("tab
 const v3d=document.getElementById("v3d"), v2d=document.getElementById("v2d"), camBtns=document.getElementById("camBtns"), planBtns=document.getElementById("planBtns");
 function showTab(is3d){
   tab3d.setAttribute("aria-selected",String(is3d)); tab2d.setAttribute("aria-selected",String(!is3d));
-  v3d.hidden=!is3d; v2d.hidden=is3d; camBtns.hidden=!is3d; planBtns.hidden=is3d;
+  v3d.hidden=!is3d; v2d.hidden=is3d; camBtns.hidden=!is3d; planBtns.hidden=is3d; document.getElementById("leg2d").hidden=is3d;
   try{localStorage.setItem("cucina-tab",is3d?"3d":"2d");}catch(e){}
   if(is3d&&window.__resize3d) window.__resize3d();
 }
@@ -422,68 +522,103 @@ try{ if(localStorage.getItem("cucina-tab")==="2d") showTab(false); }catch(e){}
 let sink3d=null;
 function setSink(w){
   sinkW=w; plan2D();
-  document.getElementById("sinkDim").textContent=w+" × "+WIN_D+" × 80";
+  const sd=document.getElementById("sinkDim"); if(sd) sd.textContent=w+" × "+WIN_D+" × 80";
   document.querySelectorAll("#sinkOpt button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.w===w)));
   if(sink3d) sink3d(w);
 }
 document.querySelectorAll("#sinkOpt button").forEach(b=>b.onclick=()=>setSink(+b.dataset.w));
 plan2D();
 
-/* ---------- costi per stanza ---------- */
+/* ---------- componenti con codici, raggruppati per elemento, e costi per stanza ---------- */
 (function(){
   const IK="https://www.ikea.com/it/it/p/";
-  const C={
-    "Cucina":[
-      ["Mobile base per lavello 60 × 60, ante VEDDINGE bianco","METOD","metod-mobile-base-per-lavello-bianco-veddinge-bianco-s69464304/",1,74],
-      ["Lavello da incasso 1 vasca 56 × 53, inox","LÅNGUDDEN","langudden-lavello-da-incasso-1-vasca-inox-s29157477/",1,94],
-      ["Miscelatore monocomando","SALLSJÖN","sallsjoen-miscelatore-monocomando-leva-later-color-acciaio-inox-90602025/",1,59],
-      ["Mobile base per forno e cassetto 60 × 60, VEDDINGE","METOD / MAXIMERA","metod-maximera-mobile-base-per-forno-e-cassetto-bianco-veddinge-bianco-s69109998/",1,115],
-      ["Forno 60 cm, bianco","LAGAN","lagan-forno-bianco-10600054/",1,189],
-      ["Piano cottura a induzione 59 cm","VILSTA","vilsta-piano-cottura-a-induzione-ikea-300-nero-50557727/",1,219],
-      ["Mobile base 3 cassetti 80 × 37, VEDDINGE","METOD / MAXIMERA","metod-maximera-mobile-base-con-3-cassetti-bianco-veddinge-bianco-s59113665/",1,216],
-      ["Pensile con ripiani 60 × 100, VEDDINGE","METOD","metod-pensile-con-ripiani-bianco-veddinge-bianco-s29457169/",1,94],
-      ["Cappa a parete 60 cm, bianco","NILSBYN","nilsbyn-cappa-da-fissare-alla-parete-ikea-300-bianco-40612710/",1,229],
-      ["Piano di lavoro 246 × 63,5 laminato bianco","JÄRSTORP","jaerstorp-piano-di-lavoro-bianco-laminato-50589653/",2,49],
-      ["Taglio obliquo e giunzione del piano","Artigiano","",1,150,1],
-      ["Zoccolo 220 × 8, bianco","FÖRBÄTTRA","foerbaettra-zoccolo-bianco-40327505/",2,16],
-      ["Rivestimento laterale 62 × 80, bianco","FÖRBÄTTRA","foerbaettra-rivestimento-laterale-bianco-40297886/",3,19],
-      ["Maniglia 335 mm, inox","BAGGANÄS","bagganaes-maniglia-inox-50338419/",6,10],
-      ["Frigo slim 47 × 51 × 150, libera installazione","Da scegliere","",1,300,1]
-    ],
-    "Veranda":[
-      ["Lavasciuga 60 cm, libera installazione","Da scegliere","",1,500,1],
-      ["Lavastoviglie 60 cm, libera installazione, bianco","LAGAN","lagan-lavastoviglie-libera-installazione-bianco-70576744/",1,349],
-      ["Ripiano in acciaio con montanti e tasselli","Fabbro o kit","",1,80,1]
-    ],
-    "Camera":[
-      ["Struttura letto con contenitori e testiera 160 × 200, con doghe","BRIMNES","brimnes-struttura-letto-contenit-testiera-bianco-loenset-s69157456/",1,399],
-      ["Materasso a molle insacchettate 160 × 200","VESTERÖY","vesteroey-materasso-a-molle-insacchettate-rigido-azzurro-40450618/",1,289],
-      ["Struttura guardaroba 50 × 58 × 236","PAX","pax-struttura-per-guardaroba-bianco-90458221/",2,80],
-      ["Struttura guardaroba 75 × 58 × 236","PAX","pax-struttura-per-guardaroba-bianco-90458235/",1,85],
-      ["Struttura guardaroba 100 × 58 × 236","PAX","pax-struttura-per-guardaroba-bianco-80458207/",1,85],
-      ["Anta con cerniere 50 × 229, bianco","FORSAND","forsand-anta-con-cerniere-bianco-s69655515/",4,50],
-      ["Anta con cerniere 50 × 229, specchio","ÅHEIM","aheim-anta-con-cerniere-vetro-a-specchio-s39281725/",1,85],
-      ["Anta con cerniere 25 × 229, specchio","ÅHEIM","aheim-anta-con-cerniere-vetro-a-specchio-s69281719/",1,65],
-      ["Maniglia 335 mm, inox","BAGGANÄS","bagganaes-maniglia-inox-50338419/",6,10]
-    ],
-    "Soggiorno":[
-      ["Tavolo 180 × 90","DANDERYD","danderyd-tavolo-impiallacciatura-di-rovere-bianco-20516130/",1,279],
-      ["Sedia, bianco","TEODORES","teodores-sedia-bianco-90350937/",6,30],
-      ["Guardaroba 150 × 60 × 201, 2 ante","PAX / FORSAND","pax-forsand-guardaroba-bianco-bianco-s29503171/",1,320]
-    ]
-  };
-  const eur=v=>v.toLocaleString("it-IT",{minimumFractionDigits:0,maximumFractionDigits:2})+" €";
-  const sum=rows=>rows.reduce((a,r)=>a+r[3]*r[4],0);
-  const rooms=Object.keys(C), tabsEl=document.getElementById("costTabs"), tbl=document.getElementById("costTable");
+  // [descrizione, marca, codice, pezzi, prezzo a pezzo €, pagina prodotto, opzioni: s stima, alt alternativa, c pezzi per confezione]
+  const GAMBA=["METOD gamba per mobile 8 cm","IKEA","705.560.67",4,2.5,"metod-gamba-per-mobile-70556067/",{c:2}];
+  const CERN=n=>["UTRUSTA cerniera con ammortizzatore 110°","IKEA","805.248.82",n,4.5,"utrusta-cerniera-ammortizz-integrato-cucina-80524882/",{c:2}];
+  const MAN=n=>["ENERYDA maniglia a conchiglia 89 mm, color ottone","IKEA","706.108.37",n,4,"eneryda-maniglia-color-ottone-70610837/",{c:2}];
+  const PARTS=[
+   {room:"Cucina",n:"1",k:"",title:"Mobile lavello",dim:"60 × 60 × 80",note:"Parete sinistra, da 105 a 165 cm dall'ingresso. Acqua e scarico sono già dietro il mobile.",items:[
+     ["METOD struttura mobile base 60 × 60 × 80, bianco","IKEA","502.056.26",1,35,"metod-mobile-base-bianco-50205626/"],GAMBA,
+     ["STENSUND anta 60 × 80, verde chiaro","IKEA","305.240.02",1,45,"stensund-anta-verde-chiaro-30524002/"],CERN(2),MAN(1),
+     ["STENSUND rivestimento laterale 62 × 80, verde chiaro","IKEA","505.239.02",2,28,"stensund-rivestimento-laterale-verde-chiaro-50523902/"],
+     ["LÅNGUDDEN lavello da incasso 1 vasca 56 × 53, inox","IKEA","291.574.77",1,94,"langudden-lavello-da-incasso-1-vasca-inox-s29157477/"],
+     ["SALLSJÖN miscelatore monocomando, acciaio","IKEA","906.020.25",1,59,"sallsjoen-miscelatore-monocomando-leva-later-color-acciaio-inox-90602025/"]]},
+   {room:"Cucina",n:"2",k:"",title:"Forno e piano cottura, sullo smusso",dim:"60 × 60 × 80",note:"Parallelo al muro da 63 cm: forno sotto il piano a induzione, cassetto basso in fondo.",items:[
+     ["METOD struttura mobile base 60 × 60 × 80, bianco","IKEA","502.056.26",1,35,"metod-mobile-base-bianco-50205626/"],GAMBA,
+     ["MAXIMERA cassetto basso 60 × 60","IKEA","902.850.32",1,32,"maximera-cassetto-basso-bianco-90285032/"],
+     ["STENSUND frontale cassetto 60 × 20, verde chiaro","IKEA","805.240.09",1,17,"stensund-frontale-cassetto-verde-chiaro-80524009/"],MAN(1),
+     ["STENSUND rivestimento laterale 62 × 80, verde chiaro, lato verso il lavello","IKEA","505.239.02",1,28,"stensund-rivestimento-laterale-verde-chiaro-50523902/"],
+     ["LAGAN forno 60 cm, bianco","IKEA","106.000.54",1,189,"lagan-forno-bianco-10600054/"],
+     ["VILSTA piano cottura a induzione 59 cm","IKEA","505.577.27",1,219,"vilsta-piano-cottura-a-induzione-ikea-300-nero-50557727/"]]},
+   {room:"Cucina",n:"3",k:"",title:"Mobile a cassetti sotto la finestra",dim:"80 × 37 × 80",note:"Da 88 a 168 cm dalla parete sinistra, parallelo al muro della finestra. Cassetti da 40 + 20 + 20.",items:[
+     ["METOD struttura mobile base 80 × 37 × 80, bianco","IKEA","102.056.28",1,35,"metod-mobile-base-bianco-10205628/"],GAMBA,
+     ["MAXIMERA cassetto alto 80 × 37","IKEA","102.850.26",1,56,"maximera-cassetto-alto-bianco-10285026/"],
+     ["MAXIMERA cassetto basso 80 × 37","IKEA","702.850.33",2,38,"maximera-cassetto-basso-bianco-70285033/"],
+     ["STENSUND frontale cassetto 80 × 40, verde chiaro","IKEA","805.240.14",1,26,"stensund-frontale-cassetto-verde-chiaro-80524014/"],
+     ["STENSUND frontale cassetto 80 × 20, verde chiaro","IKEA","205.240.12",2,22,"stensund-frontale-cassetto-verde-chiaro-20524012/"],MAN(3),
+     ["STENSUND rivestimento laterale 39 × 83, verde chiaro","IKEA","305.238.99",1,21,"stensund-rivestimento-laterale-verde-chiaro-30523899/"]]},
+   {room:"Cucina",n:"4",k:"wall",title:"Pensile sopra il lavello",dim:"60 × 37 × 100",note:"Da 155 a 255 cm da terra, allineato in basso al pensile sopra il frigo.",items:[
+     ["METOD struttura pensile 60 × 37 × 100, bianco","IKEA","202.055.38",1,36,"metod-pensile-bianco-20205538/"],
+     ["UTRUSTA ripiano 60 × 37, bianco","IKEA","102.056.14",2,9,"utrusta-ripiano-bianco-10205614/"],
+     ["STENSUND anta 60 × 100, verde chiaro","IKEA","305.239.17",1,48,"stensund-anta-verde-chiaro-30523917/"],CERN(2),MAN(1),
+     ["STENSUND rivestimento laterale 39 × 103, verde chiaro","IKEA","705.238.97",2,24,"stensund-rivestimento-laterale-verde-chiaro-70523897/"]]},
+   {room:"Cucina",n:"10",k:"wall",title:"Pensile sopra il frigo",dim:"60 × 37 × 60",note:"Da 45 a 105 cm dall'ingresso, da 155 a 215 cm da terra: 5 cm sopra il frigo.",items:[
+     ["METOD struttura pensile 60 × 37 × 60, bianco","IKEA","802.055.35",1,27,"metod-pensile-bianco-80205535/"],
+     ["UTRUSTA ripiano 60 × 37, bianco","IKEA","102.056.14",1,9,"utrusta-ripiano-bianco-10205614/"],
+     ["STENSUND anta 60 × 60, verde chiaro","IKEA","505.240.01",1,33,"stensund-anta-verde-chiaro-50524001/"],CERN(2),MAN(1),
+     ["STENSUND rivestimento laterale 39 × 83, verde chiaro, da tagliare a 60","IKEA","305.238.99",1,21,"stensund-rivestimento-laterale-verde-chiaro-30523899/"]]},
+   {room:"Cucina",n:"5",k:"wall",title:"Cappa sullo smusso",dim:"60 cm",note:"Fondo a circa 158 cm da terra.",items:[
+     ["NILSBYN cappa da fissare alla parete 60 cm, bianco","IKEA","406.127.10",1,229,"nilsbyn-cappa-da-fissare-alla-parete-ikea-300-bianco-40612710/"]]},
+   {room:"Cucina",n:"6",k:"plain",title:"Piano di lavoro e zoccolo",dim:"prof. 63,5 e 42",note:"Un pezzo unico su misura, copre anche l'angolo tra lavello e forno.",items:[
+     ["JÄRSTORP piano di lavoro 246 × 63,5, laminato bianco","IKEA","505.896.53",2,49,"jaerstorp-piano-di-lavoro-bianco-laminato-50589653/"],
+     ["Taglio obliquo, fori e giunzione del piano","Artigiano","",1,150,"",{s:1}],
+     ["STENSUND zoccolo 220 × 8, verde chiaro","IKEA","905.240.23",2,19,"stensund-zoccolo-verde-chiaro-90524023/"]]},
+   {room:"Cucina",n:"8",k:"",title:"Frigorifero combinato",dim:"47 × 51,1 × 150",note:"Libera installazione all'ingresso della cucina, staccato 5 cm dal muro.",items:[
+     ["Frigorifero combinato low frost, bianco, classe E","Daya","DMCB174MWE",1,289,"https://www.tuttopiubasso.com/prodotto/daya-dmcb174mwe-frigorifero-combinato-classe-e-low-frost-bianco/"],
+     ["Frigorifero combinato 47 × 49,5 × 144, bianco, classe E","Candy","CCG1L314EW",1,229,"https://www.unieuro.it/online/Frigoriferi/CCG1L314EW-pidCANCCG1L314EW",{alt:1}]]},
+   {room:"Veranda",n:"7",k:"",title:"Lavasciuga, in alto",dim:"60 × 60 × 85",note:"Su un ripiano in acciaio a 90 cm tassellato al muro, con due montanti davanti.",items:[
+     ["Lavasciuga 60 cm a libera installazione","Da scegliere","",1,500,"",{s:1}],
+     ["Ripiano in acciaio con montanti e tasselli","Fabbro o kit","",1,80,"",{s:1}]]},
+   {room:"Veranda",n:"9",k:"",title:"Lavastoviglie, sotto la lavasciuga",dim:"60 × 60 × 85",note:"A terra tra i montanti; lo sportello si apre verso l'apertura della veranda.",items:[
+     ["LAGAN lavastoviglie 60 cm a libera installazione, bianco","IKEA","705.767.44",1,349,"lagan-lavastoviglie-libera-installazione-bianco-70576744/"]]},
+   {room:"Camera",n:"",k:"plain",title:"Letto",dim:"160 × 200",note:"Parete sinistra, piedi verso il centro della stanza.",items:[
+     ["BRIMNES struttura letto con contenitori e testiera, doghe incluse","IKEA","691.574.56",1,399,"brimnes-struttura-letto-contenit-testiera-bianco-loenset-s69157456/"],
+     ["VESTERÖY materasso a molle insacchettate 160 × 200","IKEA","404.506.18",1,269,"vesteroey-materasso-a-molle-insacchettate-rigido-azzurro-40450618/"]]},
+   {room:"Camera",n:"",k:"plain",title:"Armadio PAX",dim:"275 × 58 × 236",note:"Dall'ingresso: 50 + 50, 75 con ante a specchio, 100.",items:[
+     ["PAX struttura guardaroba 50 × 58 × 236, bianco","IKEA","904.582.21",2,80,"pax-struttura-per-guardaroba-bianco-90458221/"],
+     ["PAX struttura guardaroba 75 × 58 × 236, bianco","IKEA","904.582.35",1,85,"pax-struttura-per-guardaroba-bianco-90458235/"],
+     ["PAX struttura guardaroba 100 × 58 × 236, bianco","IKEA","804.582.07",1,85,"pax-struttura-per-guardaroba-bianco-80458207/"],
+     ["FORSAND anta con cerniere 50 × 229, bianco","IKEA","696.555.15",4,50,"forsand-anta-con-cerniere-bianco-s69655515/"],
+     ["ÅHEIM anta con cerniere 50 × 229, specchio","IKEA","392.817.25",1,85,"aheim-anta-con-cerniere-vetro-a-specchio-s39281725/"],
+     ["ÅHEIM anta con cerniere 25 × 229, specchio","IKEA","692.817.19",1,65,"aheim-anta-con-cerniere-vetro-a-specchio-s69281719/"],
+     ["BAGGANÄS maniglia 335 mm, inox","IKEA","503.384.19",6,10,"bagganaes-maniglia-inox-50338419/"]]}
+  ];
   const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  const opt=r=>r[6]||{}, link=r=>r[5]?(r[5].startsWith("http")?r[5]:IK+r[5]):"";
+  const codeTxt=r=>(r[2]?`${esc(r[1])} ${esc(r[2])}`:esc(r[1]));
+  // elenco a destra: per stanza, per elemento, con codici
+  { const el=document.getElementById("parts"); let html="", room="";
+    PARTS.forEach(g=>{ if(g.room!==room){ room=g.room; html+=`<h3>${room}</h3>`; }
+      html+=`<div class="pg"><div class="pg-h"><span class="num${g.k?" "+g.k:""}">${g.n||"·"}</span><div><b>${esc(g.title)}</b> <span class="dim">${esc(g.dim)}</span><p>${esc(g.note)}</p></div></div><ul class="pi">`+
+        g.items.map(r=>{ const o=opt(r), u=link(r), c=codeTxt(r);
+          return `<li${o.alt?' class="alt"':''}><span>${esc(r[0])}${o.alt?' <span class="chip alt">alternativa</span>':''}${o.s?' <span class="chip">stima</span>':''}</span><span class="q">× ${r[3]}${o.c?` · conf. da ${o.c}`:''}</span><span class="cd">${u&&r[2]?`<a href="${u}" target="_blank" rel="noopener">${c}</a>`:c}</span></li>`; }).join("")+`</ul></div>`; });
+    el.innerHTML=html; }
+  const C={};
+  PARTS.forEach(g=>{ (C[g.room]=C[g.room]||[]).push(g); });
+  const eur=v=>v.toLocaleString("it-IT",{minimumFractionDigits:0,maximumFractionDigits:2})+" €";
+  const rowsOf=groups=>groups.flatMap(g=>g.items);
+  const sum=rows=>rows.filter(r=>!opt(r).alt).reduce((a,r)=>a+r[3]*r[4],0);
+  const sumEst=rows=>rows.filter(r=>opt(r).s).reduce((a,r)=>a+r[3]*r[4],0);
+  const rooms=Object.keys(C), tabsEl=document.getElementById("costTabs"), tbl=document.getElementById("costTable");
   function show(k){
     [...tabsEl.children].forEach(b=>b.setAttribute("aria-selected",String(b.dataset.k===k)));
     if(k==="Totale"){
-      const tot=rooms.reduce((a,r)=>a+sum(C[r]),0), est=rooms.reduce((a,r)=>a+C[r].filter(x=>x[5]).reduce((b,x)=>b+x[3]*x[4],0),0);
-      tbl.innerHTML=`<table><thead><tr><th>Stanza</th><th class="r">Voci</th><th class="r">Totale</th></tr></thead><tbody>${rooms.map(r=>`<tr><td>${r}</td><td class="n r">${C[r].length}</td><td class="n r">${eur(sum(C[r]))}</td></tr>`).join("")}<tr class="tot"><td>Totale casa</td><td></td><td class="n r">${eur(tot)}</td></tr><tr><td colspan="3" class="src">Di cui stime: ${eur(est)}. Prezzi IKEA: ${eur(tot-est)}.</td></tr></tbody></table>`;
+      const tot=rooms.reduce((a,r)=>a+sum(rowsOf(C[r])),0), est=rooms.reduce((a,r)=>a+sumEst(rowsOf(C[r])),0);
+      tbl.innerHTML=`<table><thead><tr><th>Stanza</th><th class="r">Voci</th><th class="r">Totale</th></tr></thead><tbody>${rooms.map(r=>`<tr><td>${r}</td><td class="n r">${rowsOf(C[r]).filter(x=>!opt(x).alt).length}</td><td class="n r">${eur(sum(rowsOf(C[r])))}</td></tr>`).join("")}<tr class="tot"><td>Totale</td><td></td><td class="n r">${eur(tot)}</td></tr><tr><td colspan="3" class="src">Di cui stime: ${eur(est)}.</td></tr></tbody></table>`;
     } else {
-      const rows=C[k];
-      tbl.innerHTML=`<table><thead><tr><th>Componente</th><th>Modello</th><th class="r">Q.tà</th><th class="r pu">Prezzo</th><th class="r">Totale</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r[0])}${r[5]?' <span class="chip">stima</span>':''}</td><td>${r[2]?`<a href="${IK+r[2]}" target="_blank" rel="noopener">${esc(r[1])}</a>`:esc(r[1])}</td><td class="n r">${r[3]}</td><td class="n r pu">${eur(r[4])}</td><td class="n r">${eur(r[3]*r[4])}</td></tr>`).join("")}<tr class="tot"><td colspan="2">Totale ${k.toLowerCase()}</td><td></td><td class="pu"></td><td class="n r">${eur(sum(rows))}</td></tr></tbody></table>`;
+      const groups=C[k], line=r=>{ const o=opt(r), u=link(r), c=codeTxt(r);
+        return `<tr${o.alt?' style="opacity:.7"':''}><td>${esc(r[0])}${o.s?' <span class="chip">stima</span>':''}${o.alt?' <span class="chip alt">alternativa</span>':''}</td><td class="n">${u&&r[2]?`<a href="${u}" target="_blank" rel="noopener">${c}</a>`:c}</td><td class="n r">${r[3]}</td><td class="n r pu">${eur(r[4])}</td><td class="n r">${o.alt?"–":eur(r[3]*r[4])}</td></tr>`; };
+      tbl.innerHTML=`<table><thead><tr><th>Componente</th><th>Codice</th><th class="r">Pezzi</th><th class="r pu">Prezzo</th><th class="r">Totale</th></tr></thead><tbody>${groups.map(g=>`<tr class="grp"><td colspan="4">${g.n?g.n+" · ":""}${esc(g.title)}</td><td class="n r">${eur(sum(g.items))}</td></tr>`+g.items.map(line).join("")).join("")}<tr class="tot"><td colspan="2">Totale ${k.toLowerCase()}</td><td></td><td class="pu"></td><td class="n r">${eur(sum(rowsOf(groups)))}</td></tr></tbody></table>`;
     }
     try{localStorage.setItem("costi-tab",k);}catch(e){}
   }
@@ -559,28 +694,55 @@ BALC.forEach(b=>floorPoly(b.poly,"#CFCBC3",-.3));
 
 /* muri con effetto "casa delle bambole" */
 const walls=[];
-function wall(p0,p1,ref,ops,h,thick,color){
+function wall(p0,p1,ref,ops,h,thick,color,ee){
   ops=(ops||[]).slice().sort((a,b)=>a[0]-b[0]); h=h||H; thick=thick||WT;
   const dx=p1[0]-p0[0], dy=p1[1]-p0[1], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
   let nx=-uy, ny=ux; const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2;
   if((mx-ref[0])*nx+(my-ref[1])*ny<0){nx=-nx;ny=-ny;}
-  const m=mat(color||"#F4F3EF",{transparent:true,opacity:1});
+  const m=mat(color||PAINT.white,{transparent:true,opacity:1});
   const piece=(t0,t1,z0,z1)=>{ if(t1-t0<.5||z1-z0<.5) return;
     const me=new THREE.Mesh(new THREE.BoxGeometry(t1-t0,z1-z0,thick),m);
     const t=(t0+t1)/2; me.position.copy(toV(p0[0]+ux*t+nx*thick/2,p0[1]+uy*t+ny*thick/2,(z0+z1)/2)); me.rotation.y=Math.atan2(uy,ux); add(me); };
-  const e=thick/2; let cur=-e;
+  const e=thick/2; let cur=-e*(ee?ee[0]:1);
   ops.forEach(o=>{ piece(cur,o[0],0,h); if(o[2]>0) piece(o[0],o[1],0,o[2]); if(o[3]<h) piece(o[0],o[1],o[3],h); cur=o[1]; });
-  piece(cur,L+e,0,h);
+  piece(cur,L+e*(ee?ee[1]:1),0,h);
   walls.push({mat:m,c:new THREE.Vector3(mx+nx*thick/2,0,-(my+ny*thick/2)),n:new THREE.Vector3(-nx,0,ny)});
 }
-kitchenWalls.forEach(w=>wall(w[0],w[1],[100,180],w[2]&&w[2].ops));
+/* pittura: pannello sottile sulla faccia interna del muro, sfuma insieme al muro */
+function paintPanel(p0,p1,ref,ops,m,T,Z){
+  const dx=p1[0]-p0[0], dy=p1[1]-p0[1], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+  let nx=-uy, ny=ux; const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2;
+  if((mx-ref[0])*nx+(my-ref[1])*ny<0){nx=-nx;ny=-ny;}
+  const t0=T?T[0]:0, t1=T?T[1]:L, z0=Z?Z[0]:0, z1=Z?Z[1]:H, extra=[];
+  const piece=(a,b,c,d)=>{ a=Math.max(a,t0); b=Math.min(b,t1); c=Math.max(c,z0); d=Math.min(d,z1); if(b-a<.5||d-c<.5) return;
+    let mm=m; if(m.map){ mm=m.clone(); mm.map=m.map.clone(); mm.map.needsUpdate=true; mm.map.repeat.set((b-a)/120,(d-c)/120); extra.push(mm); }
+    const me=new THREE.Mesh(new THREE.BoxGeometry(b-a,d-c,.5),mm); const t=(a+b)/2; me.position.copy(toV(p0[0]+ux*t-nx*.3,p0[1]+uy*t-ny*.3,(c+d)/2)); me.rotation.y=Math.atan2(uy,ux); me.receiveShadow=true; scene.add(me); };
+  let cur=0; (ops||[]).slice().sort((a,b)=>a[0]-b[0]).forEach(o=>{ piece(cur,o[0],0,H); piece(o[0],o[1],0,o[2]); piece(o[0],o[1],o[3],H); cur=o[1]; }); piece(cur,L,0,H);
+  const c=new THREE.Vector3(mx+nx*WT/2,0,-(my+ny*WT/2)), n=new THREE.Vector3(-nx,0,ny); (extra.length?extra:[m]).forEach(x=>walls.push({mat:x,c,n}));
+}
+const paintMat=col=>{ if(col==="terra") return terraMat(); const m=mat(PAINT[col],{transparent:true,opacity:1,roughness:.92}); m.color.convertSRGBToLinear(); return m; }; // colori veri, come la texture
+// terracotta nuvolata (velatura a pennellessa, come nelle foto): stesso materiale su tutte le pareti terracotta, texture ripetibile
+const terraTex=(()=>{ const N=256, cv=document.createElement("canvas"); cv.width=N; cv.height=N; const g=cv.getContext("2d");
+  g.fillStyle="#C87B5C"; /* base un filo più chiara: in 3D le pareti in ombra scuriscono */ g.fillRect(0,0,N,N); let sd=11; const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+  for(let i=0;i<60;i++){ const x=rnd()*N, y=rnd()*N, r=30+rnd()*70, light=rnd()<.55;
+    for(const ox of [-N,0,N]) for(const oy of [-N,0,N]){ const rg=g.createRadialGradient(x+ox,y+oy,0,x+ox,y+oy,r);
+      rg.addColorStop(0,light?"rgba(226,166,134,.16)":"rgba(150,80,55,.12)"); rg.addColorStop(1,"rgba(0,0,0,0)"); g.fillStyle=rg; g.fillRect(x+ox-r,y+oy-r,2*r,2*r); } }
+  const t=new THREE.CanvasTexture(cv); t.encoding=THREE.sRGBEncoding; t.wrapS=t.wrapT=THREE.RepeatWrapping; return t; })();
+const terraMat=()=>new THREE.MeshStandardMaterial({map:terraTex,roughness:.95,transparent:true,opacity:1});
+kitchenWalls.forEach((w,i)=>{ wall(w[0],w[1],[100,180],w[2]&&w[2].ops,0,0,0,w[2]&&w[2].e); if(i===KITCHEN_SFUMATO) paintPanel(w[0],w[1],[100,180],w[2]&&w[2].ops,terraMat()); });
 verandaWalls.forEach(w=>wall(w[0],w[1],[310,240],w[2]&&w[2].ops));
 const SEC=120; // resto della casa: muri sezionati a 120 cm per vedere dentro
-ROOMS.forEach(r=>{ if(!r.poly) return; r.poly.forEach((p,i)=>{ const q=r.poly[(i+1)%r.poly.length], e=r.edges[i]; if(e==="open") return; wall(p,q,r.ref,(e||[]).map(o=>[o[0],o[1],o[2],Math.min(o[3],SEC)]),SEC,WT,"#E2DFD8"); }); });
+ROOMS.forEach(r=>{ if(!r.poly) return; r.poly.forEach((p,i)=>{ const q=r.poly[(i+1)%r.poly.length], e=r.edges[i]; if(e==="open") return;
+  const a=ACCENT.find(x=>x.room===r.name&&x.edge===i);
+  const th=(r.thick&&r.thick[i])||WT;
+  if(a){ wall(p,q,r.ref,e||[],H,th,PAINT.white); paintPanel(p,q,r.ref,e||[],paintMat(a.col),a.t,a.z); }
+  else wall(p,q,r.ref,(e||[]).map(o=>[o[0],o[1],o[2],Math.min(o[3],SEC)]),SEC,th,PAINT.shade); }); });
 /* muro portante tra cucina e bagno (risega), a tutta altezza; risega verso il disimpegno sezionata */
-box(105,147.7,-9.3,48,0,H,mat("#F4F3EF")); box(105,134.8,48,49.5,0,H,mat("#F4F3EF"));
+box(104.5,147.7,-9.3,K.J1[1],0,H,mat(PAINT.white)); box(K.J1[0],134.8,K.J1[1],49.5,0,H,mat(PAINT.white));
+/* spallette dell'apertura verso la veranda (8,5 e 7 cm) */
+box(K.V[0]-LIP,K.V[0],K.V[1],K.V[1]+8.5,0,H,mat(PAINT.white)); box(K.T[0]-LIP,K.T[0],K.T[1]-7,K.T[1]+.5,0,H,mat(PAINT.white));
 /* nicchie delle porte finestre e rientranza sul retro (sezionate come il resto della casa) */
-const massM=mat("#E2DFD8");
+const massM=mat(PAINT.shade);
 box(105,150,-149,-103,0,SEC,massM);
 box(-229.6,-145,-2,56,0,SEC,massM); box(-45,-12,-2,56,0,SEC,massM); box(-210,-198,56,158,0,SEC,massM);
 box(-229.6,-30,-976,-932,0,SEC,massM); box(70,242,-976,-932,0,SEC,massM);
@@ -588,11 +750,25 @@ BALC.forEach(b=>b.rail.forEach(r=>wall(r[0],r[1],[(b.poly[0][0]+b.poly[2][0])/2,
 
 /* finestra cucina */
 const glass=new THREE.MeshStandardMaterial({color:0xBFD8E6,transparent:true,opacity:.35,roughness:.1});
-const frameM=mat("#FFFFFF"), mid=(WIN[0]+WIN[1])/2, wy0=271+WT/2-2, wy1=271+WT/2+2;
-box(WIN[0],WIN[1],271+WT/2-.5,271+WT/2+.5,SILL,WIN_TOP,glass).castShadow=false;
-box(WIN[0],WIN[1],271,271+WT,SILL-3,SILL,mat("#D8D4CC"));
-[[WIN[0],WIN[0]+5],[WIN[1]-5,WIN[1]],[mid-2,mid+2]].forEach(q=>box(q[0],q[1],wy0,wy1,SILL,WIN_TOP,frameM));
-box(WIN[0],WIN[1],wy0,wy1,WIN_TOP-5,WIN_TOP,frameM); box(WIN[0],WIN[1],wy0,wy1,SILL,SILL+5,frameM);
+const frameM=mat("#FFFFFF");
+// box allineato alla parete della finestra (t lungo il muro, d verso la stanza)
+function cbox(t0,t1,d0,d1,z0,z1,m,parent){
+  const me=new THREE.Mesh(new THREE.BoxGeometry(t1-t0,z1-z0,d1-d0),m);
+  const c=cP((t0+t1)/2,(d0+d1)/2); me.position.copy(toV(c[0],c[1],(z0+z1)/2)); me.rotation.y=DCA; return add(me,parent);
+}
+// anta unica: davanzale a 85, telaio fino a 257,5, vetro da 95; maniglia dal lato dello smusso, cerniere verso la veranda
+{ const a=WINC[0], b=WINC[1], d0=-WT/2-2, d1=-WT/2+2;
+  cbox(a,b,-WT/2-.5,-WT/2+.5,WIN_FR,WIN_TOP-5,glass).castShadow=false;
+  cbox(a-2,b+2,-WT,.5,SILL-3,SILL,mat("#D8D4CC"));
+  [[a,a+5],[b-5,b]].forEach(q=>cbox(q[0],q[1],d0,d1,SILL,WIN_TOP,frameM));
+  cbox(a,b,d0,d1,WIN_TOP-5,WIN_TOP,frameM); cbox(a,b,d0,d1,SILL,WIN_FR,frameM);
+  cbox(a+6,a+8,d1,d1+1.5,140,160,mat("#B9BEBD",{metalness:.6,roughness:.35})); }
+/* impianti esistenti dal rilievo, sulla faccia interna dei muri della cucina (sfumano con il muro) */
+IMP.filter(m=>m.z).forEach(m=>{ const w=kitchenWalls[m.w], p0=w[0], p1=w[1], dx=p1[0]-p0[0], dy=p1[1]-p0[1], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+  let nx=-uy, ny=ux; const mx=(p0[0]+p1[0])/2, my=(p0[1]+p1[1])/2; if((mx-100)*nx+(my-180)*ny<0){nx=-nx;ny=-ny;}
+  const mm=mat(IMPCOL[m.k],{transparent:true,opacity:1,roughness:.5}), t=(m.t[0]+m.t[1])/2;
+  const me=new THREE.Mesh(new THREE.BoxGeometry(m.t[1]-m.t[0],m.z[1]-m.z[0],1.2),mm); me.position.copy(toV(p0[0]+ux*t-nx*.6,p0[1]+uy*t-ny*.6,(m.z[0]+m.z[1])/2)); me.rotation.y=Math.atan2(uy,ux); scene.add(me);
+  walls.push({mat:mm,c:new THREE.Vector3(mx+nx*WT/2,0,-(my+ny*WT/2)),n:new THREE.Vector3(-nx,0,ny)}); });
 
 /* altre finestre (chiuse), porte finestre (aperte), porta d'ingresso */
 function winX(x0,x1,yc,z0,z1){ box(x0,x1,yc-.5,yc+.5,z0,z1,glass).castShadow=false; const m=(x0+x1)/2;
@@ -607,16 +783,6 @@ box(232,240,-394,-306,0,215,mat("#6B4F3A",{roughness:.6})); box(230,232,-318,-31
 box(ARM[0],ARM[1]-2,ARM[2],ARM[3],0,240,mat("#ECECEA"));
 [0,1,2].forEach(i=>{ const w=(ARM[3]-ARM[2])/3, y0=ARM[2]+w*i; box(ARM[1]-2,ARM[1],y0+.4,y0+w-.4,1,239,mat("#FAFAF8",{roughness:.4})); box(ARM[1],ARM[1]+1.2,y0+w-8,y0+w-6,110,130,mat("#B9BEBD",{metalness:.5,roughness:.4})); });
 
-/* soggiorno: tavolo 180x90, 6 sedie, armadio 150 */
-{ const D=DIN, woodM=mat("#B98E62",{roughness:.6}), chM=mat("#3E4442",{roughness:.7}), wM=mat("#EEEDE8",{roughness:.55}), hM=mat("#8E9592",{metalness:.6,roughness:.35});
-  box(D.x0,D.x1,D.y0,D.y1,72,75,woodM);
-  [[D.x0+4,D.y0+4],[D.x1-9,D.y0+4],[D.x0+4,D.y1-9],[D.x1-9,D.y1-9]].forEach(([x,y])=>box(x,x+5,y,y+5,0,72,woodM));
-  CHAIRS.forEach(cx=>[[D.y1-8,D.y1+36,D.y1+36,D.y1+39],[D.y0-36,D.y0+8,D.y0-39,D.y0-36]].forEach(([s0,s1,b0,b1])=>{
-    box(cx-22,cx+22,s0,s1,43,46,chM); box(cx-22,cx+22,b0,b1,46,86,chM);
-    [[cx-21,s0+1],[cx+18,s0+1],[cx-21,s1-4],[cx+18,s1-4]].forEach(([x,y])=>box(x,x+3,y,y+3,0,43,chM)); }));
-  const W=SWARD; box(W.x0,W.x1,W.y0,W.y1-2,0,W.h,wM);
-  [[W.x0,(W.x0+W.x1)/2],[(W.x0+W.x1)/2,W.x1]].forEach(([a,b],i)=>{ box(a+.25,b-.25,W.y1-2,W.y1,1,W.h-1,mat("#F7F6F2",{roughness:.45})); const hx=i?a+3:b-5; box(hx,hx+2,W.y1,W.y1+1.2,90,130,hM); });
-}
 
 /* camera: BRIMNES 160x200 con testiera e contenitori, PAX 275 */
 { const B=BED, hx=B.x0+B.hb, wM=mat("#F3F2EE",{roughness:.6}), sheetM=mat("#FBFBF8",{roughness:.9}), duvM=mat("#9FB2C2",{roughness:.95}), pilM=mat("#F7F6F2",{roughness:.95});
@@ -639,15 +805,22 @@ box(ARM[0],ARM[1]-2,ARM[2],ARM[3],0,240,mat("#ECECEA"));
 }
 
 /* mobili */
-const carcM=mat("#DEDDD7"), plinthM=mat("#3B403E"), handleM=mat("#8E9592",{metalness:.6,roughness:.35});
-const frontM=mat("#F2F1EC",{roughness:.6}), topM=mat("#C49A6C",{roughness:.55});
+const carcM=mat("#DEDDD7"), plinthM=mat(FRONT_COL,{roughness:.6}), handleM=mat(BRASS,{metalness:.35,roughness:.3});
+const frontM=mat(FRONT_COL,{roughness:.6}), topM=mat("#C49A6C",{roughness:.55});
+/* termoarredo: tre gruppi di barre orizzontali tra due collettori verticali (misure indicative) */
+{ const rm=mat("#F4F4F2",{roughness:.4,metalness:.1}), ang=Math.atan2(DJ[1],DJ[0]);
+  const rb=(t0,t1,d0,d1,z0,z1)=>{ const me=new THREE.Mesh(new THREE.BoxGeometry(t1-t0,z1-z0,d1-d0),rm); const c=radP((t0+t1)/2,(d0+d1)/2); me.position.copy(toV(c[0],c[1],(z0+z1)/2)); me.rotation.y=ang; add(me); };
+  const a=RAD.t[0], b=RAD.t[1], z0=RAD.z[0], z1=RAD.z[1], dm=RAD.d[1]-2.5, gap=8, gh=(z1-z0-2*gap)/3;
+  [[a,a+3],[b-3,b]].forEach(q=>rb(q[0],q[1],dm-1.5,dm+1.5,z0,z1));
+  for(let g=0;g<3;g++){ const g0=z0+g*(gh+gap); for(let k=0;k<6;k++){ const zz=g0+1+k*(gh-3.8)/5; rb(a+3,b-3,dm-1,dm+1,zz,zz+1.8); } }
+  [[a+5,a+8],[b-8,b-5]].forEach(q=>rb(q[0],q[1],RAD.d[0],dm-1.5,z1-14,z1-11)); }
 const blackM=mat("#151718",{roughness:.25,metalness:.1}), steelM=mat("#B9BEBD",{metalness:.7,roughness:.3});
 const wallUnits=[]; const W=m=>{wallUnits.push(m);return m;};
 
 /* 1 · lavello sulla parete sinistra */
 box(0,55,RUN_L[0],RUN_L[1],0,8,plinthM);
 box(0,60,RUN_L[0],RUN_L[1],8,CARC,carcM);
-box(60,61.8,RUN_L[0]+.3,RUN_L[1]-.3,8.3,87.7,frontM); box(61.8,63,RUN_L[1]-8,RUN_L[1]-6,62,82,handleM);
+box(60,61.8,RUN_L[0]+.3,RUN_L[1]-.3,8.3,87.7,frontM); box(61.8,63.3,RUN_L[1]-14,RUN_L[1]-5,79.5,82.5,handleM);
 box(0,61.8,RUN_L[1],RUN_L[1]+1.8,0,CARC,frontM);
 box(8,54,RUN_L[0]+5,RUN_L[1]-5,TOP-.2,TOP+.4,steelM).castShadow=false;
 box(11,51,RUN_L[0]+8,RUN_L[1]-8,TOP+.4,TOP+.5,mat("#8A908E",{metalness:.6,roughness:.4}));
@@ -658,7 +831,7 @@ box(11,51,RUN_L[0]+8,RUN_L[1]-8,TOP+.4,TOP+.5,mat("#8A908E",{metalness:.6,roughn
 dbox(S0,S1,DF-61.8,DF-5,0,8,plinthM);
 dbox(S0,S1,DF-61.8,DF-1.8,8,CARC,carcM);
 dbox(S0+.3,S1-.3,DF-1.8,DF,8.3,27.7,frontM);
-dbox(SM-11,SM+11,DF,DF+1.2,22,23.5,handleM);
+dbox(SM-4.5,SM+4.5,DF,DF+1.5,23,26,handleM);
 dbox(S0+1,S1-1,DF-1.8,DF+.2,28.3,87.7,blackM);
 dbox(S0+6,S1-6,DF+.2,DF+1.7,80,81.5,steelM);
 dbox(SM-29,SM+29,DF-56.8,DF-5.8,TOP,TOP+.6,blackM);
@@ -667,20 +840,24 @@ dbox(SM-29,SM+29,DF-56.8,DF-5.8,TOP,TOP+.6,blackM);
 const sinkGroups={};
 [80].forEach(w=>{
   const g=new THREE.Group(); scene.add(g); sinkGroups[w]=g;
-  const x1=SINK_X0+w;
-  const yc=271-WIN_D, yf=yc-1.8;
-  box(SINK_X0,x1,yc+5,271,0,8,plinthM,g);
-  box(SINK_X0,x1,yc,271,8,CARC,carcM,g);
-  [[8.3,30],[30.3,58],[58.3,87.7]].forEach(z=>{ box(SINK_X0+.3,x1-.3,yf,yc,z[0],z[1],frontM,g); box((SINK_X0+x1)/2-16,(SINK_X0+x1)/2+16,yf-1.4,yf,z[1]-6,z[1]-4.5,handleM,g); });
-  box(SINK_X0-1.8,SINK_X0,yf,271,0,CARC,frontM,g);
-  box(x1,x1+1.8,yf,Math.min(271,yDE(x1+1.8)),0,CARC,frontM,g);
+  const t0=tOfX(SINK_X0), t1=tOfX(SINK_X0+w), tc=(t0+t1)/2;
+  cbox(t0,t1,0,WIN_D-5,0,8,plinthM,g);
+  cbox(t0,t1,0,WIN_D,8,CARC,carcM,g);
+  [[8.3,47.7],[48.3,67.7],[68.3,87.7]].forEach(z=>{ cbox(t0+.3,t1-.3,WIN_D,WIN_D+1.8,z[0],z[1],frontM,g); cbox(tc-4.5,tc+4.5,WIN_D+1.8,WIN_D+3.3,z[1]-5.5,z[1]-2.5,handleM,g); });
+  cbox(t0-1.8,t0,0,WIN_D+1.8,0,CARC,frontM,g);
+  cbox(t1,t1+1.8,0,WIN_D+1.8,0,CARC,frontM,g);
   const s=new THREE.Shape(); worktopFor(w).forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1]));
   const tg=new THREE.ExtrudeGeometry(s,{depth:TOP-CARC,bevelEnabled:false}); tg.rotateX(-Math.PI/2);
   const tm=new THREE.Mesh(tg,topM); tm.position.y=CARC; add(tm,g);
 });
 
 /* pensili */
-W(box(0,37,RUN_L[0],RUN_L[1],140,240,carcM)); W(box(37,38.8,RUN_L[0]+.3,RUN_L[1]-.3,140.3,239.7,frontM)); W(box(38.8,40,RUN_L[0]+40,RUN_L[0]+44,142,170,handleM));
+// pensile sopra il lavello 60 × 100 e pensile sopra il frigo 60 × 60, allineati in basso a 5 cm sopra il frigo
+W(box(0,37,RUN_L[0],RUN_L[1],WALL_Z,WALL_Z+100,carcM)); W(box(37,38.8,RUN_L[0]+.3,RUN_L[1]-.3,WALL_Z+.3,WALL_Z+99.7,frontM)); W(box(38.8,40.3,RUN_L[0]+44,RUN_L[0]+53,WALL_Z+3,WALL_Z+6,handleM));
+W(box(0,37,FCAB[0],FCAB[1],WALL_Z,WALL_Z+60,carcM)); W(box(37,38.8,FCAB[0]+.3,FCAB[1]-.3,WALL_Z+.3,WALL_Z+59.7,frontM)); W(box(38.8,40.3,FCAB[0]+5,FCAB[0]+14,WALL_Z+3,WALL_Z+6,handleM));
+// rivestimenti laterali STENSUND, in tinta con le ante
+W(box(0,38.8,RUN_L[1],RUN_L[1]+1.8,WALL_Z,WALL_Z+100,frontM)); W(box(0,38.8,RUN_L[0]-1.8,RUN_L[0],WALL_Z+60,WALL_Z+100,frontM)); W(box(0,38.8,FCAB[0]-1.8,FCAB[0],WALL_Z,WALL_Z+60,frontM));
+box(FX[1]+.1,61.8,RUN_L[0]-1.8,RUN_L[0],0,CARC,frontM); dbox(S0-1.8,S0,0,DF-1.8,0,CARC,frontM);
 // cappa a parete sullo smusso, sopra il piano cottura
 W(dbox(SM-30,SM+30,0,50,158,168,steelM)); W(dbox(SM-30,SM+30,1,49,157.5,158,mat("#2B2F2E",{roughness:.4}))); W(dbox(SM-12.5,SM+12.5,0,25,168,H,steelM));
 
@@ -711,8 +888,8 @@ function sprite(num,dashed){
   const t=new THREE.CanvasTexture(cv); t.encoding=THREE.sRGBEncoding;
   const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false})); s.scale.set(13,13,1); s.renderOrder=10; scene.add(s); return s;
 }
-const p2=onD(SM,DF+12), p5=onD(SM,25);
-const tags=[[1,72,RUN_L[0]+30,60],[2,p2[0],p2[1],60],[3,SINK_X0+30,222,60],[4,45,RUN_L[0]+30,190,true],[5,p5[0],p5[1],200,true],[7,WASH[0]-3,WASH[2]+11,WZ+70],[9,WASH[0]-3,WASH[2]+11,55],[8,(FX[0]+FX[1])/2,(FRY[0]+FRY[1])/2,FRIDGE.h+10]].map(a=>{const s=sprite(a[0],a[4]); s.position.copy(toV(a[1],a[2],a[3])); s.userData.wall=!!a[4]; s.userData.id=a[0]; return s;});
+const p2=onD(SM,DF+12), p5=onD(SM,25), p3=cP(tOfX(SINK_X0+30),47);
+const tags=[[1,72,RUN_L[0]+30,60],[2,p2[0],p2[1],60],[3,p3[0],p3[1],60],[4,45,RUN_L[0]+30,WALL_Z+50,true],[10,45,FCAB[0]+30,WALL_Z+30,true],[5,p5[0],p5[1],200,true],[7,WASH[0]-3,WASH[2]+11,WZ+70],[9,WASH[0]-3,WASH[2]+11,55],[8,(FX[0]+FX[1])/2,(FRY[0]+FRY[1])/2,FRIDGE.h+10]].map(a=>{const s=sprite(a[0],a[4]); s.position.copy(toV(a[1],a[2],a[3])); s.userData.wall=!!a[4]; s.userData.id=a[0]; return s;});
 function label(text,x,y,z,sc){
   const cv=document.createElement("canvas"); cv.width=512; cv.height=96; const c=cv.getContext("2d");
   c.font="500 44px Archivo, Arial, sans-serif"; c.fillStyle="#5D6B65"; c.textAlign="center"; c.textBaseline="middle"; c.fillText(text.toUpperCase(),256,50);
@@ -724,19 +901,17 @@ ROOMS.forEach(r=>label(r.name,r.lab[0],r.lab[1],1,r.name.length>6?1.4:1.2));
 BALC.forEach(b=>label("Balcone",b.lab[0],b.lab[1],1));
 label("Armadio a muro",-173,101,250,1.2);
 
-sink3d=w=>{ Object.keys(sinkGroups).forEach(k=>sinkGroups[k].visible=(+k===w)); const t=tags.find(t=>t.userData.id===3); t.position.copy(toV(SINK_X0+w-10,222,60)); };
+sink3d=w=>{ Object.keys(sinkGroups).forEach(k=>sinkGroups[k].visible=(+k===w)); const t=tags.find(t=>t.userData.id===3), q=cP(tOfX(SINK_X0+w-10),47); t.position.copy(toV(q[0],q[1],60)); };
 sink3d(sinkW);
 
 /* punti di vista */
-const views={ camIn:{p:[30,170,215],t:[112,92,-175]}, camCorner:{p:[150,178,-130],t:[58,90,-203]}, camTop:{p:[380,580,250],t:[160,40,-170]}, camHouse:{p:[560,1250,1080],t:[40,0,380]}, camBed:{p:[-40,400,520],t:[50,30,790]} };
+const views={ camIn:{p:[30,170,215],t:[112,92,-175]}, camCorner:{p:[150,178,-130],t:[58,90,-203]}, camTop:{p:[380,580,250],t:[160,40,-170]}, camHouse:{p:[560,1250,1080],t:[40,0,380]}, camBed:{p:[150,330,640],t:[-60,60,780]}, camLiving:{p:[-140,310,290],t:[-20,70,540]} };
 function go(k){ const v=views[k]; camera.position.set(v.p[0],v.p[1],v.p[2]); controls.target.set(v.t[0],v.t[1],v.t[2]); controls.update();
   Object.keys(views).forEach(id=>document.getElementById(id).setAttribute("aria-pressed",String(id===k))); }
 Object.keys(views).forEach(k=>document.getElementById(k).onclick=()=>go(k));
 go("camIn");
 controls.addEventListener("start",()=>Object.keys(views).forEach(id=>document.getElementById(id).setAttribute("aria-pressed","false")));
 
-document.querySelectorAll("#fronts .sw").forEach(b=>{ b.style.background=b.dataset.c;
-  b.onclick=()=>{ frontM.color.set(b.dataset.c); document.querySelectorAll("#fronts .sw").forEach(o=>o.setAttribute("aria-pressed",String(o===b))); }; });
 const optWall=document.getElementById("optWall"), optNum=document.getElementById("optNum");
 function vis(){ wallUnits.forEach(m=>m.visible=optWall.checked); tags.forEach(t=>t.visible=optNum.checked&&(!t.userData.wall||optWall.checked)); }
 optWall.onchange=vis; optNum.onchange=vis;
