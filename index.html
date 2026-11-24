@@ -192,7 +192,7 @@ tr.tot td{border-bottom:0;font-weight:600}
         <li><b>Elemento tratteggiato</b> sugli ultimi 36 cm del muro della finestra, alto fino a circa 260, senza quote: chiedere al tecnico cos'è.</li>
         <li><b>Prese</b>: le due prese della parete sinistra (82–112,5 cm dall'ingresso, a 110–118 da terra) finiscono dietro il frigo e sopra il piano di lavoro non ce ne sono. Vanno spostate o aggiunte; la linea per forno e induzione è da verificare con l'elettricista.</li>
         <li><b>Gas</b>: l'uscita sul muro della finestra (5,5 cm dallo smusso, 63,5 da terra) resta chiusa nell'angolo tra il mobile del forno e quello sotto la finestra. Con l'induzione va chiusa e messa in sicurezza da un tecnico abilitato. Il rubinetto del gas a 105–115,5 cm, vicino alla veranda, resta libero.</li>
-        <li><b>Punto luce sullo smusso</b>, a 35 cm dallo spigolo verso la finestra: l'altezza non è quotata. Se è sopra i 168 cm finisce dietro il camino della cappa e può servire per alimentarla.</li>
+        <li><b>Punto luce sullo smusso</b>, a 35 cm dallo spigolo verso la finestra: l'altezza non è quotata. Se è sopra i 155 cm finisce dentro il pensile cappa e può alimentare direttamente la cappa integrata.</li>
         <li><b>Veranda</b>: misure interne ancora in scala dalla SCIA; attacchi di acqua e scarico per lavasciuga e lavastoviglie da verificare.</li>
       </ul>
     </section>
@@ -361,6 +361,13 @@ const WT_YL=K.B[1]+(S0-u[0]*63.5)/u[1];
 // profondità del piano sotto la finestra: allineato al bordo davanti al mobile del forno
 const WD=(()=>{ const p=onD(S1,DF+1.7); return (p[0]-K.C[0])*nC[0]+(p[1]-K.C[1])*nC[1]; })();
 const worktopFor=w=>{ const t1=tOfX(SINK_X0+w); return [[0,RUN_L[0]],[63.5,RUN_L[0]],[63.5,WT_YL],onD(S0,DF+1.7),onD(S1,DF+1.7),cP(t1,WD),cP(t1,0),K.C,K.B]; };
+/* angolo tra lavello e forno: triangolo tra il fianco del lavello, il fianco del forno e il muro, chiuso da un fondo.
+   front = spigolo davanti (sul fianco del lavello), oven = spigolo davanti del fianco del forno, wall = angolo sul muro */
+const CN_S=S0-1.8, CN={}; CN.front=onD(CN_S,(RUN_L[1]+1.8-K.B[1]-u[1]*CN_S)/n[1]); CN.oven=onD(CN_S,DF-1.8); CN.wall=[0,RUN_L[1]+1.8];
+const CN_Z=[8,34,60]; /* piani dei ripiani (spessore 1,8): vani da circa 24, 24 e 26 cm */
+/* in alto: mensole tra pensile scolapiatti (muro sinistro) e pensile cappa (smusso), profonde 37 come i pensili */
+const UP={wall0:[0,RUN_L[1]+1.8], front0:[38.8,RUN_L[1]+1.8], front1:onD(S0-1.8,38.8), wall1:[0,K.B[1]+(S0-1.8)/u[1]]};
+const UP_Z=[0,1,2,3].map(i=>WALL_Z+i*(100-1.8)/3); /* quattro ripiani: il primo a filo del fondo dei pensili, l'ultimo a filo del cielo */
 // lato della cucina verso il bagno: x del muro a una data y
 const xRoom=y=>y<K.J1[1]?K.I[0]:y<=K.W2[1]?K.J1[0]+(y-K.J1[1])*(K.W2[0]-K.J1[0])/(K.W2[1]-K.J1[1]):y<=K.V[1]?K.W2[0]:K.V[0];
 const WASH=[317,377,K.V[1],K.V[1]+66], WZ=90; // colonna: lavastoviglie a terra, lavasciuga sopra su ripiano a 90 cm
@@ -445,11 +452,15 @@ function plan2D(){
   // pensili tratteggiati
   out.push(`<rect x="0" y="${Y(RUN_L[1])}" width="38.8" height="${RUN_L[1]-RUN_L[0]}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
   out.push(`<rect x="0" y="${Y(FCAB[1])}" width="38.8" height="${FCAB[1]-FCAB[0]}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
-  out.push(`<polygon points="${pts(rrect(SM-30,SM+30,0,50))}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
+  out.push(`<polygon points="${pts(rrect(S0,S1,0,38.8))}" fill="none" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 3"/>`);
+  out.push(`<polygon points="${pts([UP.wall0,UP.front0,UP.front1,UP.wall1])}" fill="var(--accent)" fill-opacity=".06" stroke="var(--accent)" stroke-width=".8" stroke-dasharray="2 2"/>`);
   // ingombro sportello forno
   out.push(`<polygon points="${pts(rrect(S0+1,S1-1,DF,DF+50))}" fill="var(--warn)" fill-opacity=".08" stroke="var(--warn)" stroke-width=".8" stroke-dasharray="3 2"/>`);
   const ol=onD(SM,DF+42); out.push(`<text x="${f(ol[0])}" y="${f(Y(ol[1]))}" transform="rotate(${(-DA*180/Math.PI).toFixed(1)} ${f(ol[0])} ${f(Y(ol[1]))})" text-anchor="middle" class="pt" style="font-size:6px">sportello forno aperto</text>`);
   // piano di lavoro e moduli
+  // mini scaffali triangolari nell'angolo tra lavello e forno (sotto il piano)
+  out.push(`<polygon points="${pts([CN.front,CN.oven,CN.wall])}" fill="#D9BC94" fill-opacity=".55" stroke="var(--fg)" stroke-width=".7" stroke-dasharray="2 1.5"/>`);
+  out.push(`<line x1="${f(CN.oven[0])}" y1="${f(Y(CN.oven[1]))}" x2="${f(CN.wall[0])}" y2="${f(Y(CN.wall[1]))}" stroke="${FRONT_COL}" stroke-width="2.2"/>`);
   out.push(`<polygon points="${pts(worktopFor(sinkW))}" fill="var(--worktop)" fill-opacity=".55" stroke="var(--fg)" stroke-width="1"/>`);
   out.push(`<g stroke="var(--fg)" stroke-width=".6" fill="none" stroke-dasharray="3 2"><polygon points="${pts(rrect(S0,S1,DF-61.8,DF))}"/><line x1="0" y1="${Y(RUN_L[1])}" x2="60" y2="${Y(RUN_L[1])}"/><line x1="${f(cP(tOfX(SINK_X0),0)[0])}" y1="${f(Y(cP(tOfX(SINK_X0),0)[1]))}" x2="${f(cP(tOfX(SINK_X0),WIN_D)[0])}" y2="${f(Y(cP(tOfX(SINK_X0),WIN_D)[1]))}"/></g>`);
   out.push(`<polygon points="${pts(rrect(SM-29,SM+29,DF-56.8,DF-5.8))}" fill="none" stroke="var(--fg)" stroke-width=".8"/>`);
@@ -474,7 +485,7 @@ function plan2D(){
     out.push(`<line x1="${WASH[0]+5}" y1="${f(Y(WASH[2]+14))}" x2="${WASH[0]+5}" y2="${f(Y(WASH[3]-14))}" stroke="var(--fg)" stroke-width="2"/><circle cx="${WASH[0]+26}" cy="${f(Y(cy+7))}" r="13" fill="none" stroke="var(--fg)" stroke-width=".8"/><text x="${WASH[0]+31}" y="${f(Y(WASH[2]+12))}" text-anchor="middle" class="ap">LAVASCIUGA</text><text x="${WASH[0]+31}" y="${f(Y(WASH[2]+5))}" text-anchor="middle" class="ap" style="font-size:5px">+ LAVASTOVIGLIE</text>`);
   }
   // numeri
-  out.push(tag([72,RUN_L[0]+14],1),tag(onD(S1-5,DF+9),2),tag(cP(tOfX(SINK_X0+sinkW-11),27),3),tag([19,RUN_L[0]+48],4,true),tag([19,FCAB[0]+8],10,true),tag(onD(SM,25),5,true),tag([WASH[0]+20,WASH[3]+10],7),tag([WASH[0]+40,WASH[3]+10],9),tag([(FX[0]+FX[1])/2,FRY[0]+9],8));
+  out.push(tag([72,RUN_L[0]+14],1),tag(onD(S1-5,DF+9),2),tag(cP(tOfX(SINK_X0+sinkW-11),27),3),tag([19,RUN_L[0]+48],4,true),tag([19,FCAB[0]+8],10,true),tag([(CN.front[0]+CN.oven[0])/2-u[0]*5,(CN.front[1]+CN.oven[1])/2-u[1]*5],11),tag(onD(SM,25),5,true),tag([(UP.wall0[0]+UP.front0[0]+UP.front1[0]+UP.wall1[0])/4,(UP.wall0[1]+UP.front0[1]+UP.front1[1]+UP.wall1[1])/4],12,true),tag([WASH[0]+20,WASH[3]+10],7),tag([WASH[0]+40,WASH[3]+10],9),tag([(FX[0]+FX[1])/2,FRY[0]+9],8));
   // impianti esistenti dal rilievo (elettrici vicino al muro, acqua e gas un po' più dentro per non sovrapporli)
   { const pos=(w,t,d)=>w===0?[d,t]:w===1?onD(t,d):cP(t,d);
     IMP.forEach(m=>{ const el=m.k==="socket"||m.k==="light", p=pos(m.w,(m.t[0]+m.t[1])/2,el?3.2:8.5), x=p[0], y=Y(p[1]), c=IMPCOL[m.k];
@@ -543,6 +554,10 @@ plan2D();
      ["STENSUND rivestimento laterale 62 × 80, verde chiaro","IKEA","505.239.02",2,28,"stensund-rivestimento-laterale-verde-chiaro-50523902/"],
      ["LÅNGUDDEN lavello da incasso 1 vasca 56 × 53, inox","IKEA","291.574.77",1,94,"langudden-lavello-da-incasso-1-vasca-inox-s29157477/"],
      ["SALLSJÖN miscelatore monocomando, acciaio","IKEA","906.020.25",1,59,"sallsjoen-miscelatore-monocomando-leva-later-color-acciaio-inox-90602025/"]]},
+   {room:"Cucina",n:"11",k:"",title:"Mini scaffali triangolari nell'angolo",dim:"lati 61 × 47 × 22",note:"Nel vuoto sotto il piano tra lavello e forno: tre ripiani a giorno che seguono l'angolo dei due mobili, vani da circa 24, 24 e 26 cm. I fianchi sono quelli verdi del lavello e del forno; un fondo verde chiude il triangolo cieco dietro. Zoccolo dagli avanzi di quello STENSUND.",items:[
+     ["Ripiani triangolari su misura, multistrato di betulla 18 mm, 3 pezzi","Falegname o taglio su misura","",1,40,"",{s:1}],
+     ["STENSUND rivestimento laterale 62 × 80, verde chiaro, tagliato a 47 cm come fondo","IKEA","505.239.02",1,28,"stensund-rivestimento-laterale-verde-chiaro-50523902/"],
+     ["Reggimensola a scomparsa o listelli, 6 pezzi","Ferramenta","",1,10,"",{s:1}]]},
    {room:"Cucina",n:"2",k:"",title:"Forno e piano cottura, sullo smusso",dim:"60 × 60 × 80",note:"Parallelo al muro da 63 cm: forno sotto il piano a induzione, cassetto basso in fondo.",items:[
      ["METOD struttura mobile base 60 × 60 × 80, bianco","IKEA","502.056.26",1,35,"metod-mobile-base-bianco-50205626/"],GAMBA,
      ["MAXIMERA cassetto basso 60 × 60","IKEA","902.850.32",1,32,"maximera-cassetto-basso-bianco-90285032/"],
@@ -557,9 +572,10 @@ plan2D();
      ["STENSUND frontale cassetto 80 × 40, verde chiaro","IKEA","805.240.14",1,26,"stensund-frontale-cassetto-verde-chiaro-80524014/"],
      ["STENSUND frontale cassetto 80 × 20, verde chiaro","IKEA","205.240.12",2,22,"stensund-frontale-cassetto-verde-chiaro-20524012/"],MAN(3),
      ["STENSUND rivestimento laterale 39 × 83, verde chiaro","IKEA","305.238.99",1,21,"stensund-rivestimento-laterale-verde-chiaro-30523899/"]]},
-   {room:"Cucina",n:"4",k:"wall",title:"Pensile sopra il lavello",dim:"60 × 37 × 100",note:"Da 155 a 255 cm da terra, allineato in basso al pensile sopra il frigo.",items:[
+   {room:"Cucina",n:"4",k:"wall",title:"Pensile scolapiatti sopra il lavello",dim:"60 × 37 × 100",note:"Da 155 a 255 cm da terra, allineato in basso al pensile sopra il frigo e al pensile cappa. Lo scolapiatti prende il posto del ripiano più basso.",items:[
      ["METOD struttura pensile 60 × 37 × 100, bianco","IKEA","202.055.38",1,36,"metod-pensile-bianco-20205538/"],
-     ["UTRUSTA ripiano 60 × 37, bianco","IKEA","102.056.14",2,9,"utrusta-ripiano-bianco-10205614/"],
+     ["UTRUSTA scolapiatti per pensile 60 cm","IKEA","202.046.14",1,35,"https://www.ikea.com/it/it/search/?q=20204614",{s:1}],
+     ["UTRUSTA ripiano 60 × 37, bianco","IKEA","102.056.14",1,9,"utrusta-ripiano-bianco-10205614/"],
      ["STENSUND anta 60 × 100, verde chiaro","IKEA","305.239.17",1,48,"stensund-anta-verde-chiaro-30523917/"],CERN(2),MAN(1),
      ["STENSUND rivestimento laterale 39 × 103, verde chiaro","IKEA","705.238.97",2,24,"stensund-rivestimento-laterale-verde-chiaro-70523897/"]]},
    {room:"Cucina",n:"10",k:"wall",title:"Pensile sopra il frigo",dim:"60 × 37 × 60",note:"Da 45 a 105 cm dall'ingresso, da 155 a 215 cm da terra: 5 cm sopra il frigo.",items:[
@@ -567,8 +583,16 @@ plan2D();
      ["UTRUSTA ripiano 60 × 37, bianco","IKEA","102.056.14",1,9,"utrusta-ripiano-bianco-10205614/"],
      ["STENSUND anta 60 × 60, verde chiaro","IKEA","505.240.01",1,33,"stensund-anta-verde-chiaro-50524001/"],CERN(2),MAN(1),
      ["STENSUND rivestimento laterale 39 × 83, verde chiaro, da tagliare a 60","IKEA","305.238.99",1,21,"stensund-rivestimento-laterale-verde-chiaro-30523899/"]]},
-   {room:"Cucina",n:"5",k:"wall",title:"Cappa sullo smusso",dim:"60 cm",note:"Fondo a circa 158 cm da terra.",items:[
-     ["NILSBYN cappa da fissare alla parete 60 cm, bianco","IKEA","406.127.10",1,229,"nilsbyn-cappa-da-fissare-alla-parete-ikea-300-bianco-40612710/"]]},
+   {room:"Cucina",n:"5",k:"wall",title:"Pensile cappa sullo smusso",dim:"60 × 37 × 100",note:"Da 155 a 255 cm da terra come gli altri pensili: il fondo resta a circa 62 cm sopra il piano a induzione. Con scarico all'esterno serve un foro Ø 15 cm nel muro dello smusso; senza foro la cappa lavora in modalità filtrante con i filtri al carbone. Prezzi di struttura e cappa presi da IKEA Spagna, da verificare in Italia.",items:[
+     ["METOD struttura pensile per cappa integrata 60 × 37 × 100, bianco","IKEA","105.476.41",1,89,"https://www.ikea.com/it/it/search/?q=10547641",{s:1}],
+     ["UNDERVERK cappa integrata 60 cm, acciaio inox","IKEA","703.891.39",1,299,"https://www.ikea.com/it/it/search/?q=70389139",{s:1}],
+     ["NYTTIG TUB 150 kit tubo di scarico","IKEA","902.502.59",1,40,"https://www.ikea.com/it/it/search/?q=90250259",{s:1}],
+     ["NYTTIG FIL 500 filtro al carbone, solo se la cappa è filtrante","IKEA","004.019.55",1,35,"nyttig-fil-500-filtro-al-carbone-attivo-00401955/",{alt:1}],
+     ["STENSUND anta 60 × 80, verde chiaro","IKEA","305.240.02",1,45,"stensund-anta-verde-chiaro-30524002/"],CERN(2),MAN(1),
+     ["STENSUND rivestimento laterale 39 × 103, verde chiaro","IKEA","705.238.97",2,24,"stensund-rivestimento-laterale-verde-chiaro-70523897/"]]},
+   {room:"Cucina",n:"12",k:"wall",title:"Mensole diagonali tra scolapiatti e cappa",dim:"profonde fino a 37",note:"Quattro ripiani a giorno da 155 a 255 cm che uniscono il fianco del pensile scolapiatti a quello del pensile cappa e seguono l'angolo dei due muri. Fronte aperto di circa 30 cm verso la stanza, vani da circa 31 cm.",items:[
+     ["Ripiani su misura, multistrato di betulla 18 mm, 4 pezzi","Falegname o taglio su misura","",1,45,"",{s:1}],
+     ["Reggimensola a scomparsa, 8 pezzi","Ferramenta","",1,12,"",{s:1}]]},
    {room:"Cucina",n:"6",k:"plain",title:"Piano di lavoro e zoccolo",dim:"prof. 63,5 e 42",note:"Un pezzo unico su misura, copre anche l'angolo tra lavello e forno.",items:[
      ["JÄRSTORP piano di lavoro 246 × 63,5, laminato bianco","IKEA","505.896.53",2,49,"jaerstorp-piano-di-lavoro-bianco-laminato-50589653/"],
      ["Taglio obliquo, fori e giunzione del piano","Artigiano","",1,150,"",{s:1}],
@@ -836,6 +860,24 @@ dbox(S0+1,S1-1,DF-1.8,DF+.2,28.3,87.7,blackM);
 dbox(S0+6,S1-6,DF+.2,DF+1.7,80,81.5,steelM);
 dbox(SM-29,SM+29,DF-56.8,DF-5.8,TOP,TOP+.6,blackM);
 
+/* 11 · mini scaffali triangolari a giorno nell'angolo tra lavello e forno */
+{ const prism=(poly,z0,z1,m)=>{ const s=new THREE.Shape(); poly.forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1])); const g=new THREE.ExtrudeGeometry(s,{depth:z1-z0,bevelEnabled:false}); g.rotateX(-Math.PI/2); const me=new THREE.Mesh(g,m); me.position.y=z0; return add(me); };
+  const sOf=p=>(p[0]-K.B[0])*u[0]+(p[1]-K.B[1])*u[1];
+  const atS=(a,b,s)=>{ const t=(s-sOf(a))/(sOf(b)-sOf(a)); return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]; };
+  const F=CN.front, O=CN.oven, Wl=CN.wall, shelfM=mat("#D9BC94",{roughness:.6}), edgeM=mat("#C9A67A",{roughness:.6});
+  // fondo verde in diagonale (chiude il triangolo cieco dietro), zoccolo arretrato di 5 cm
+  const dx=Wl[0]-O[0], dy=Wl[1]-O[1], L=Math.hypot(dx,dy); let nb=[-dy/L,dx/L]; if((K.B[0]-(O[0]+Wl[0])/2)*nb[0]+(K.B[1]-(O[1]+Wl[1])/2)*nb[1]<0) nb=[-nb[0],-nb[1]];
+  prism([O,Wl,[Wl[0]+nb[0]*1.8,Wl[1]+nb[1]*1.8],[O[0]+nb[0]*1.8,O[1]+nb[1]*1.8]],8,CARC,frontM);
+  prism([atS(F,Wl,CN_S-5),atS(O,Wl,CN_S-5),Wl],0,8,plinthM);
+  // tre ripiani triangolari in multistrato di betulla, con il bordo a vista leggermente più scuro
+  CN_Z.forEach(z=>{ prism([F,O,Wl],z,z+1.8,shelfM); const a=[F[0]-u[0]*.6,F[1]-u[1]*.6], b=[O[0]-u[0]*.6,O[1]-u[1]*.6]; prism([F,O,b,a],z-.05,z+1.85,edgeM); });
+  // qualche barattolo per leggere la scala
+  const jar=(p,r,h,z,c)=>{ const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,18),mat(c,{roughness:.35})); m.position.copy(toV(p[0],p[1],z+1.8+h/2)); add(m); };
+  // il triangolo è stretto: i barattoli stanno attorno al centro del cerchio inscritto (raggio circa 7 cm)
+  const la=Math.hypot(O[0]-Wl[0],O[1]-Wl[1]), lb=Math.hypot(Wl[0]-F[0],Wl[1]-F[1]), lc=Math.hypot(F[0]-O[0],F[1]-O[1]), ls=la+lb+lc;
+  const I=[(la*F[0]+lb*O[0]+lc*Wl[0])/ls,(la*F[1]+lb*O[1]+lc*Wl[1])/ls], tw=(p,k)=>[I[0]+(p[0]-I[0])*k,I[1]+(p[1]-I[1])*k];
+  jar(tw(O,.35),3,11,CN_Z[2],"#EDE6D6"); jar(tw(Wl,.3),3,9,CN_Z[2],"#B5694A"); jar(I,4,16,CN_Z[1],"#F4F1EA"); jar(I,5,7,CN_Z[0],"#8B9481"); }
+
 /* 3 · mobile da 40 con cassetti sotto la finestra, e piano di lavoro */
 const sinkGroups={};
 [80].forEach(w=>{
@@ -858,8 +900,22 @@ W(box(0,37,FCAB[0],FCAB[1],WALL_Z,WALL_Z+60,carcM)); W(box(37,38.8,FCAB[0]+.3,FC
 // rivestimenti laterali STENSUND, in tinta con le ante
 W(box(0,38.8,RUN_L[1],RUN_L[1]+1.8,WALL_Z,WALL_Z+100,frontM)); W(box(0,38.8,RUN_L[0]-1.8,RUN_L[0],WALL_Z+60,WALL_Z+100,frontM)); W(box(0,38.8,FCAB[0]-1.8,FCAB[0],WALL_Z,WALL_Z+60,frontM));
 box(FX[1]+.1,61.8,RUN_L[0]-1.8,RUN_L[0],0,CARC,frontM); dbox(S0-1.8,S0,0,DF-1.8,0,CARC,frontM);
-// cappa a parete sullo smusso, sopra il piano cottura
-W(dbox(SM-30,SM+30,0,50,158,168,steelM)); W(dbox(SM-30,SM+30,1,49,157.5,158,mat("#2B2F2E",{roughness:.4}))); W(dbox(SM-12.5,SM+12.5,0,25,168,H,steelM));
+// pensile cappa sullo smusso: METOD 60 × 37 × 100 per cappa integrata, allineato agli altri pensili (62 cm sopra l'induzione)
+W(dbox(S0,S1,0,37,WALL_Z,WALL_Z+100,carcM));
+W(dbox(S0+.3,S1-.3,37,38.6,WALL_Z,WALL_Z+19.7,steelM)); W(dbox(S0+1,S1-1,30,38,WALL_Z-.2,WALL_Z,mat("#2B2F2E",{roughness:.4})));
+W(dbox(S0+.3,S1-.3,37,38.8,WALL_Z+20.3,WALL_Z+99.7,frontM)); W(dbox(SM-4.5,SM+4.5,38.8,40.3,WALL_Z+23,WALL_Z+26,handleM));
+W(dbox(S0-1.8,S0,0,38.8,WALL_Z,WALL_Z+100,frontM)); W(dbox(S1,S1+1.5,2,38.8,WALL_Z,WALL_Z+100,frontM));
+
+/* 12 · mensole diagonali a giorno tra pensile scolapiatti e pensile cappa */
+{ const prism=(poly,z0,z1,m)=>{ const s=new THREE.Shape(); poly.forEach((p,i)=>i?s.lineTo(p[0],p[1]):s.moveTo(p[0],p[1])); const g=new THREE.ExtrudeGeometry(s,{depth:z1-z0,bevelEnabled:false}); g.rotateX(-Math.PI/2); const me=new THREE.Mesh(g,m); me.position.y=z0; return add(me); };
+  const A=UP.wall0, Bq=UP.front0, Hq=UP.front1, Pq=UP.wall1, shelfM=mat("#D9BC94",{roughness:.6}), edgeM=mat("#C9A67A",{roughness:.6});
+  const fx=Hq[0]-Bq[0], fy=Hq[1]-Bq[1], fl=Math.hypot(fx,fy), inw=[-fy/fl,fx/fl]; // verso l'interno dell'angolo
+  const nIn=((A[0]-Bq[0])*inw[0]+(A[1]-Bq[1])*inw[1])>0?inw:[-inw[0],-inw[1]];
+  UP_Z.forEach(z=>{ W(prism([A,Bq,Hq,Pq],z,z+1.8,shelfM)); W(prism([Bq,Hq,[Hq[0]+nIn[0]*.6,Hq[1]+nIn[1]*.6],[Bq[0]+nIn[0]*.6,Bq[1]+nIn[1]*.6]],z-.05,z+1.85,edgeM)); });
+  const jar=(p,r,h,z,c)=>{ const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,18),mat(c,{roughness:.35})); m.position.copy(toV(p[0],p[1],z+1.8+h/2)); W(add(m)); };
+  const mix=(k1,k2,k3,k4)=>[A[0]*k1+Bq[0]*k2+Hq[0]*k3+Pq[0]*k4,A[1]*k1+Bq[1]*k2+Hq[1]*k3+Pq[1]*k4];
+  jar(mix(.25,.25,.25,.25),4.5,13,UP_Z[0],"#F4F1EA"); jar(mix(.35,.15,.15,.35),3.5,10,UP_Z[1],"#B5694A"); jar(mix(.2,.3,.3,.2),3,12,UP_Z[1],"#EDE6D6");
+  const pot=mix(.25,.25,.25,.25); jar(pot,5,9,UP_Z[2],"#C27354"); const lf=new THREE.Mesh(new THREE.SphereGeometry(7,16,12),mat("#6F8A5B",{roughness:.8})); lf.position.copy(toV(pot[0],pot[1],UP_Z[2]+1.8+9+5)); W(add(lf)); }
 
 /* 8 · frigo slim alto all'ingresso */
 box(FX[0],FX[1]-1.6,FRY[0]+.2,FRY[1]-.2,1.5,FRIDGE.h,mat("#EDEFEE",{roughness:.45}));
@@ -888,8 +944,8 @@ function sprite(num,dashed){
   const t=new THREE.CanvasTexture(cv); t.encoding=THREE.sRGBEncoding;
   const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false})); s.scale.set(13,13,1); s.renderOrder=10; scene.add(s); return s;
 }
-const p2=onD(SM,DF+12), p5=onD(SM,25), p3=cP(tOfX(SINK_X0+30),47);
-const tags=[[1,72,RUN_L[0]+30,60],[2,p2[0],p2[1],60],[3,p3[0],p3[1],60],[4,45,RUN_L[0]+30,WALL_Z+50,true],[10,45,FCAB[0]+30,WALL_Z+30,true],[5,p5[0],p5[1],200,true],[7,WASH[0]-3,WASH[2]+11,WZ+70],[9,WASH[0]-3,WASH[2]+11,55],[8,(FX[0]+FX[1])/2,(FRY[0]+FRY[1])/2,FRIDGE.h+10]].map(a=>{const s=sprite(a[0],a[4]); s.position.copy(toV(a[1],a[2],a[3])); s.userData.wall=!!a[4]; s.userData.id=a[0]; return s;});
+const p2=onD(SM,DF+12), p5=onD(SM,42), p3=cP(tOfX(SINK_X0+30),47);
+const tags=[[1,72,RUN_L[0]+30,60],[2,p2[0],p2[1],60],[3,p3[0],p3[1],60],[4,45,RUN_L[0]+30,WALL_Z+50,true],[10,45,FCAB[0]+30,WALL_Z+30,true],[11,(CN.front[0]+CN.oven[0])/2+u[0]*4,(CN.front[1]+CN.oven[1])/2+u[1]*4,47],[5,p5[0],p5[1],228,true],[12,(UP.front0[0]+UP.front1[0])/2+4,(UP.front0[1]+UP.front1[1])/2+1.3,240,true],[7,WASH[0]-3,WASH[2]+11,WZ+70],[9,WASH[0]-3,WASH[2]+11,55],[8,(FX[0]+FX[1])/2,(FRY[0]+FRY[1])/2,FRIDGE.h+10]].map(a=>{const s=sprite(a[0],a[4]); s.position.copy(toV(a[1],a[2],a[3])); s.userData.wall=!!a[4]; s.userData.id=a[0]; return s;});
 function label(text,x,y,z,sc){
   const cv=document.createElement("canvas"); cv.width=512; cv.height=96; const c=cv.getContext("2d");
   c.font="500 44px Archivo, Arial, sans-serif"; c.fillStyle="#5D6B65"; c.textAlign="center"; c.textBaseline="middle"; c.fillText(text.toUpperCase(),256,50);
